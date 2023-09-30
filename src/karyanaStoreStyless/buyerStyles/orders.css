@@ -1,0 +1,101 @@
+.orders-cont {
+    width: 90%;
+    height: 100%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 60px;
+
+}
+
+.from-store {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+}
+
+
+.orders-cont p {
+    font-size: 20px;
+    word-wrap: break-word;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.purchase-date p {
+    font-size: 14px;
+    color: rgb(173, 173, 173);
+    /* margin-top: -5px; */
+    /* margin-bottom: 5px; */
+
+}
+
+.order-cart-cont {
+    width: 340px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+    background-color: white;
+    gap: 40px;
+    box-shadow: 8px 8px 1px rgba(0, 0, 0, 0.2);
+    padding-top: 10px;
+    border-radius: 10px;
+
+}
+
+
+.n-of-prods {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+
+}
+
+.available p {
+    font-size: 12px;
+    color: rgb(173, 173, 173);
+    margin-top: -4px;
+
+
+}
+
+.in-stock p {
+    margin-right: 30px;
+    margin-top: 5px;
+}
+
+.Order-Now{
+    flex: 1;
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    width: 100%;
+    padding-bottom: 80px;
+
+}
+
+
+
+.quantity{
+   flex: 1;
+   position: absolute;
+   bottom: 10px;
+   right: 40px;
+    
+}
+.quantity p{
+    margin-top: 5px;
+    font-size: 17px;   
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;     
+     
+}
+
+.cart {
+    padding-right: 30px;
+}
+.cart img{
+    width: 30px;
+}

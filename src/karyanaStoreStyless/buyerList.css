@@ -1,0 +1,74 @@
+.buyerList-conatiner {
+    width: 80%;
+    margin: auto;
+
+}
+
+.buyerList-conatiner p {
+    font-size: 20px;
+    font-weight: bold;
+
+}
+
+.buyerList-table {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    border-bottom: 1px solid;
+}
+
+.buyers-purchases-cont button {
+    background-color: green;
+    color: white;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    margin-right: 10px;
+}
+
+.Abuyer-purchases-cont {
+    width: 80%;
+    margin: auto;
+
+}
+
+.buyerList-thead p {
+    flex: 1;
+    box-shadow: 5px 5px 0.5px rgba(0, 0, 0, 0.14);
+    padding: 10px 10px 10px 10px;
+}
+
+.tr {
+    width: 100%;
+    display: flex;
+    border-bottom: 0.4px solid;
+    border-color: grey;
+    padding-left: 10px;
+
+
+
+}
+
+
+.tr p {
+    flex: 1;
+}
+
+
+
+
+/* @media screen and (min-width:400px ) and (max-width: 663px ) {
+    .buyerList-thead {
+      padding-left: 130px;
+      justify-content: space-between;
+      width: 400px;
+    }
+    
+    .buyerList-conatiner tr{
+        width: 400px;
+        justify-content: space-between;
+        margin-left: -36px;
+
+    };
+  } */

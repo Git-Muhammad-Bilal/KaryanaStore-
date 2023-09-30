@@ -1,0 +1,283 @@
+.b-store-Products-cont{
+    margin-left:-110px;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-between;
+}
+ 
+.hr{
+    border-right: 1px solid green;
+    height: 599px;
+    /* flex: 1; */
+    /* position: absolute; */
+    /* right: 460px; */
+    margin-top: -55px;
+    position: fixed;
+    right: 400px;
+
+
+}
+.productList-table-cont{
+    flex: 1;
+    height: 186px;
+}
+.header div,
+.product-details div
+{
+   flex: 1;    
+}
+.header div{
+    margin-left: 20px;
+    flex: 1;
+    height: 40px;
+}
+
+p{
+    word-wrap: break-word;
+}
+
+
+.product-List-container{
+    width: 70%;
+}
+
+.order-card{
+    width: 30%;
+    height: 500px;
+    
+    
+}
+
+.order-cart-for-prods{
+    width: 340px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+    background-color: white;
+    gap: 40px;
+    box-shadow: 8px 8px 1px  rgba(0, 0, 0, 0.2);
+    padding-top: 10px;
+    border-radius: 10px;
+    position: fixed;
+}
+
+.Order-Now button{
+    background-color: rgb(16, 124, 21);
+    padding: 8px  13px  8px  13px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+}
+
+.qunaity-input{
+    flex: 2;
+    position: relative;
+    transform:2s;
+    
+}
+
+.qunaity-input input{
+    /* position: absolute; */
+    /* top: -17px; */
+    /* right: -86px; */
+    width: 130px;
+    font-size: 13px;
+    border: none;
+    padding: 10px 10px  10px 10px;
+    box-shadow: 5px 5px 0.6px  rgba(0, 0, 0, 0.15);
+    outline-style: none;
+
+    border-bottom: 0.5px solid grey;
+    
+}
+
+.product-details div{
+    margin-left: 20px;
+    /* border: 1px solid; */
+    flex: 1;
+}
+
+.item-purchase{
+    display: block;
+}
+
+.ip-none{
+    display: hidden;
+}
+
+/* import React, { useEffect, useRef, useState } from 'react'
+import ProductLIst from '../../store/ProductList';
+import { useParams } from 'react-router-dom';
+import { useGetProductsQuery } from '../../../reduxStore/karyanaStore/productsSlice';
+import OrdersCart from '../orders/OrdersCart';
+import "../../../karyanaStoreStyless/buyerStyles/storeProducts.css"
+import "../../../karyanaStoreStyless/buyerStyles/orders.css"
+import { useBase64Query } from '../../../hooks/useBase64Query';
+import { log } from 'console';
+import { useDispatch, useSelector } from 'react-redux';
+import { cancealCartItem, extractProductInfo } from '../../../reduxStore/Buyer/AddToCartSlice';
+import { inputProducttypes } from '../../store/storeTypes';
+
+const StoreProducts = () => {
+  const [inpQuantity, setQuantity] = useState<string>('');
+  const [popUpInput, setPopUpInput] = useState<string>('');
+  const [pickedProuct, setPickedPrdocut] = useState<Number>()
+  console.log(inpQuantity, pickedProuct, 'as;dkjlfasdk;lf');
+  
+  const dispatch = useDispatch();
+  let refer = useRef<HTMLInputElement | null>(null)
+  let { storeId } = useParams()
+  let data = useGetProductsQuery(storeId || undefined)
+  const { data: products, isError, isLoading, error } = data
+
+  let cart = useSelector(({ cartProduct }) => cartProduct)
+ 
+  function closepop(ev: MouseEvent) {
+     let classNme = ev.target as HTMLLIElement
+    
+     if (classNme.id === popUpInput) {
+      setPopUpInput(classNme.id)
+    } else {
+      setPopUpInput(classNme?.id)
+    }
+  }
+
+  useEffect(() => {
+
+    document.body.addEventListener('click', closepop)
+
+    return () => {
+      document.body.removeEventListener('click', closepop)
+    }
+  }, [])
+
+
+  const addToCart = (prod: inputProducttypes) => {
+    dispatch(extractProductInfo(prod))
+  }
+  const cancealCartProd = (prod: inputProducttypes) => {
+    dispatch(cancealCartItem(prod))
+  }
+
+  const renderCancealBtn = (prod: inputProducttypes) => {
+    return cart.cartProduct.map((p: inputProducttypes) => p._id == prod._id &&
+      <button
+        className='buy-product'
+        onClick={() => cancealCartProd(prod)}
+      >Canceal
+      </button>
+
+    )
+  }
+
+  const showInput = (_id: string, quantity: string, price:number) => {
+   console.log(Number(price) * Number(inpQuantity), 'total');
+   console.log(pickedProuct,'salkjdf');
+   
+    return (
+      Number(quantity) !== 0 && popUpInput === _id ?
+        <input
+          type="text"
+          placeholder='Quantity'
+          id={_id.toString()}
+          value={inpQuantity}
+          ref={refer}
+          onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === 'Enter') {
+              setPopUpInput('')
+              setPickedPrdocut(Number(_id))
+
+            }
+          }}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuantity(e.target.value)}
+        />
+        : <p id={_id}>{pickedProuct === Number(_id) ? inpQuantity || quantity : quantity}</p>
+    )
+  }
+
+
+  let prods = products?.map((prod, index, ) => {
+    const { productName, quantity, cost, price, _id, userId }: inputProducttypes = prod;
+
+    return (
+      <div  key={index} className='productList-table-cont' >
+        <div className='header'>
+          <div>
+            <p>Prodct Name </p>
+
+          </div>
+          <div>
+            <p>Quantity kg/liter</p>
+          </div>
+          <div>
+            <p>Price Rs</p>
+          </div>
+          {pickedProuct === _id && inpQuantity && <div>
+            <p>Purchase Rs</p>
+          </div>}
+        </div>
+
+        <div className='product-details'>
+          <div>
+            <p>{productName}</p>
+          </div>
+
+          <div key={index} className="qunaity-input" id={_id.toString()} onClick={() => {
+             setPickedPrdocut(_id)
+            setPopUpInput(_id.toString())
+            }}>
+            {showInput(_id.toString(), quantity.toString(), Number(price))}
+          </div>
+          <div>
+            <p>{price.toString()}</p>
+          </div>
+          <div>
+            {
+             
+              <p>{ pickedProuct === _id && inpQuantity && Number(price) * Number(inpQuantity)}</p>
+            }
+          </div>
+        </div>
+        <div className='productList-btns'>
+          <div>
+            <button
+              className='buy-product'
+              onClick={() => addToCart({ ...prod, quantity: Number(inpQuantity) })}
+            >{quantity === 0 ? 'sold' : 'buy'}
+            </button>
+          </div>
+          {renderCancealBtn(prod)}
+        </div>
+      </div>
+
+
+    );
+
+  });
+
+
+
+  return (
+    <div className='b-store-Products-cont'>
+
+      <div className='product-list-container'>
+        {isLoading && <h2>Loading....</h2>}
+        {prods?.length ? prods : <h1>You do not have any Product, add products now!!!!</h1>}
+      </div>
+
+      <div className='order-card'>
+        <OrdersCart storeId={storeId} />
+      </div>
+    </div>
+  )
+
+
+
+
+
+}
+
+export default StoreProducts; */

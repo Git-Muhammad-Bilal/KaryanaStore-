@@ -1,0 +1,54 @@
+.create-prod-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    font-size: 13px;
+    margin: auto;
+    /* background-color: rgb(240, 240, 240); */
+}
+
+.cre-prd-form-cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.cre-prd-form-cont input {
+    padding: 15px 25px 15px 25px;
+    width: 300px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    margin-top: -20px;
+
+}
+
+.cre-prd-form-cont div h2 {
+     max-width: 200px;
+     display: flex;
+     align-items: end;
+     justify-content: start;
+
+}
+
+
+.crea-prod-btns {
+    flex: 1;
+    margin-top: 10px;
+
+}
+.crea-prod-btns a{
+    padding:10px 30px 10px 30px ;
+    font-size: 15px;
+    background-color: rgb(13, 67, 13);
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    border-radius: 12px;
+
+}
+
