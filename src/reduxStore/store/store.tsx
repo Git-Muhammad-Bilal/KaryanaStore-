@@ -4,16 +4,19 @@ import { purchaesSlice } from "../karyanaStore/purchaseSlice";
 import {fetchStoresSlice} from "../Buyer/fetchStoresSlice";
 import { createBuyerSlice } from "../Buyer/createBuyerSlice";
 import  cartProductSlice  from "../Buyer/AddToCartSlice";
+import {getSalesNotifications} from "../karyanaStore/saleNotificationSlice";
 // import { setupListeners } from "@reduxjs/toolkit/dist/query";
 
 export let store = configureStore({
     reducer:{
         cartProduct:cartProductSlice,
+        [createBuyerSlice.reducerPath]: createBuyerSlice.reducer,
         [fetchProductSlice.reducerPath]: fetchProductSlice.reducer,
         [purchaesSlice.reducerPath]: purchaesSlice.reducer,
         [fetchStoresSlice.reducerPath]: fetchStoresSlice.reducer,
-        [createBuyerSlice.reducerPath]: createBuyerSlice.reducer,
-        [createBuyerSlice.reducerPath]: createBuyerSlice.reducer,
+        [getSalesNotifications.reducerPath]:getSalesNotifications.reducer
+        // [createBuyerSlice.reducerPath]: createBuyerSlice.reducer,
+        // [createBuyerSlice.reducerPath]: createBuyerSlice.reducer,
     },
 
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat( 
@@ -21,6 +24,7 @@ export let store = configureStore({
         purchaesSlice.middleware,
         fetchStoresSlice.middleware,
         createBuyerSlice.middleware,
+        getSalesNotifications.middleware,
         ),
 
 

@@ -1,108 +1,87 @@
-import React from 'react';
-import { generatePath } from 'react-router-dom';
-import { useBase64Query } from '../../hooks/useBase64Query';
+
+import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import "../../karyanaStoreStyless/productList.css"
-import { useDeleteProductMutation, useGetProductsQuery } from '../../reduxStore/karyanaStore/productsSlice';
-import { inputProducttypes } from './storeTypes';
+import { useLazyGetProductsQuery } from '../../reduxStore/karyanaStore/productsSlice';
+import { useLazyGetSalNotficaionsQuery } from '../../reduxStore/karyanaStore/saleNotificationSlice';
+import MapProductList from './MapProductList';
 
 
+import io from 'socket.io-client';
+const jwt = localStorage.getItem('accessToken')
 
-const ProductLIst = () => {
-    let token = localStorage?.getItem('accessToken');
-    
-    const { setQuery, navigateTo } = useBase64Query();
+const socketio = io('http://localhost:3003', {
+   auth:{jwt}
+   
+})
+
+const ProductLIst = ({setIsNewNotfn}: { setIsNewNotfn:React.Dispatch<React.SetStateAction<number>> }) => {
+    const [notifns, setNotifns] = useState<any>()
+
     const { showBoundary } = useErrorBoundary()
-    const { data:products, isError, isLoading, error } = useGetProductsQuery('')
 
-               
-    let [deleteProduct] = useDeleteProductMutation()
-     isError && showBoundary(error)
+    let [getProducts, data] = useLazyGetProductsQuery()
+    data.isError && showBoundary(data.error)
 
-
-    async function editProduct(products:inputProducttypes) {
-        let prodBtoaData = btoa(JSON.stringify(products))
-        setQuery('product', prodBtoaData);
-        navigateTo(`/store/products/CreateProduct`, null);
-    }
-
-    async function navigateToPurchases(product:inputProducttypes) {
-        let ProdInfo = {
-            productName: product.productName,
-            cost: product.cost,
-            quantity: product.quantity,
-            price: product.price,
-            productId: product._id,
-            store: product.userId
+    let [getNotifications, result] = useLazyGetSalNotficaionsQuery();
+           
+    useEffect(() => {
+        let getND = async () => {
+            let data = await getNotifications('');
+            
+            getProducts('');
+            setNotifns(data.data)
         }
 
-        let prodBtoaData = btoa(JSON.stringify(ProdInfo))
-        setQuery('product', prodBtoaData);
-        let path = generatePath(`/store/products/Sales/:productId`, {
-            productId: product._id.toString(),
-        });
-        navigateTo(path, null);
+        getND()
+
+
+    }, [])
+
+    // let [getNotifications, result] = useLazyGetSalNotficaionsQuery();
+
+    // let notificationsData = result.data || [];
+    // let curNotiftn = notificationsData[index]?.notfiedPurchases?.purchaseCount.toString()
+    // let prodid = notificationsData[index]?.notfiedPurchases?.productId?.toString()
+
+    // socketio.on('order', async (arg: []) => {
+    //    let data = await getNotifications('')
+    //    console.log(arg,'data.dataaaa');
+       
+    //    setNotifns(arg) 
+    //    setIsNewNotfn(Number(Date.now()))
+    // })
+
+
+    function allNotifications(index:number) {
+        if (notifns?.length  ) {
+            
+           let notification = notifns[index]?.notfiedPurchases.purchaseCount
+           
+           return  notification == '0'?'':notification
+           
+        }else{
+            return '';
+        }
+
     }
 
+    let prods = data.data?.map((p, index) => {
+        return <MapProductList product={p}
+            index={index}
+            socketio={socketio}
+            notifications={allNotifications(index).toString()}
+            setIsNewNotfn = {setIsNewNotfn}
+        />
 
-    let prods = token && products?.map((prod, index) => {
-        const { productName, quantity, cost, price, _id, userId }:{productName:String, quantity:Number, cost:Number, price:Number, _id:Number, userId:Number } = prod;
-        return (
-            <div key={index} className='productList-table-cont'>
-                <div className='header'>
-                    <div>
-                        <p>Prodct Name </p>
+    })
 
-                    </div>
-                    <div>
-                        <p>Quantity kg/liter</p>
-                    </div>
-                    <div>
-                        <p>Cost Rs</p>
-                    </div>
-                    <div>
-                        <p>Price Rs</p>
-                    </div>
-                </div>
 
-                <div className='product-details'>
-                    <div>
-                        <p>{productName}</p>
-                    </div>
-                    <div>
-                        <p>{quantity.toString()}</p>
-                    </div>
-                    <div>
-                        <p>{cost.toString()}</p>
-                    </div>
-                    <div>
-                        <p>{price.toString()}</p>
-                    </div>
-                </div>
-                <div className='productList-btns'>
-                    <div>
-                        <button className='buy-product'
-                            onClick={() => { navigateToPurchases(prod) }}>buy</button>
-                    </div>
-
-                    <div>
-                        <button onClick={()=> { editProduct({ productName, quantity, cost, price, _id, userId }) }}>edit</button>
-                    </div>
-
-                    <div>
-                        <button onClick={() => { deleteProduct(_id) }}>delete</button>
-                    </div>
-                </div>
-
-            </div>
-        );
-
-    });
 
     return (
         <div className='product-list-container'>
-            {isLoading && <h2>Loading....</h2>}
-            {prods?.length? prods:  <h1>You do not have any Product, add products now!!!!</h1>}
+            {data.isLoading && <h2>Loading....</h2>}
+            {prods?.length ? prods : <h1>You do not have any Product, add products now!!!!</h1>}
         </div>
     )
 
@@ -110,14 +89,14 @@ const ProductLIst = () => {
 
 
 
+
+
+
+
+
+
+
 export default ProductLIst;
-
-
-
-
-
-
-
 
 
 // let fetchProds = async () => {

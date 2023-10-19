@@ -1,18 +1,52 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useBase64Query } from '../../../hooks/useBase64Query';
 import { store } from '../../../reduxStore/Buyer/types/storeInfoTypes';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { inputProducttypes } from '../../store/storeTypes';
-import { cartProdTypes } from '../../../reduxStore/Buyer/AddToCartSlice';
+import { cancealCartItem, cartProdTypes, extractProductInfo } from '../../../reduxStore/Buyer/AddToCartSlice';
 import CreateProduct from '../../store/CreateProduct';
+import io from 'socket.io-client';
+const jwt = localStorage.getItem('accessToken')
+console.log(jwt, 'jwt');
 
-const OrdersCart = ({ storeId }: { storeId?: string }) => {
+
+
+const socketio = io('http://localhost:3003', {
+  auth: { jwt }
+
+})
+
+
+
+const OrdersCart = ({ storeId, setHasOrdered, hasOrdered }:
+  {
+    storeId?: string,
+    setHasOrdered?: React.Dispatch<React.SetStateAction<string[]>> | any,
+    hasOrdered?: string[],
+  }) => {
 
   let cn = !storeId?.length ? "order-cart-cont " : "order-cart-for-prods"
- let data = useSelector(({cartProduct})=> cartProduct)
- 
+  
+  let data = useSelector(({ cartProduct }) => cartProduct)
+  
+  
   const { queryData } = useBase64Query();
   const { storeName, products } = queryData;
+  
+  const orderPurchases = () => {
+    
+    socketio.emit('order', data.cartProduct,(res:string)=>{
+      
+      console.log(data.cartProduct, 'order4');
+      setHasOrdered([res])
+      
+    }) 
+
+    
+  }
+  
+
+
 
   return (
     <div className={cn}>
@@ -39,24 +73,24 @@ const OrdersCart = ({ storeId }: { storeId?: string }) => {
       </div>
       <div className="total-purchase-cost">
         <p>Total  Purchases: 2344</p>
-        
+
       </div>
       {storeId && <div className="Order-Now">
         <div className='order-btn'>
-        <button>Order Now</button>
+          <button onClick={() => data.cartProduct.length && orderPurchases()}>Order Now</button>
         </div>
          
-
+         
         <div className="cart">
-          <img src="/cart.png" alt="car" /> 
+          <img src="/cart.png" alt="car" />
         </div>
       </div>
 
       }
-        
-        <div className='quantity'>
-          <p>{data.cartProduct.length}</p>
-        </div>
+
+      <div className='quantity'>
+        <p>{ data.cartProduct.length}</p>
+      </div>
       {/* <div className='hr'>
         <hr />
       </div> */}

@@ -20,7 +20,7 @@ axiosApi.interceptors.request.use(function (config) {
 });
 
 axiosApi.interceptors.response.use(function (response) {
-    console.log(response,'axios')
+    // console.log(response,'axios')
     
     if (response.data?.accessToken) {
         localStorage.setItem('accessToken', response.data.accessToken);

@@ -53,6 +53,9 @@ export interface PurchaseTypes  {
     store: number,
     buyer:number,
     product:number,
+    purchaseDate?:string,
+    purchaseTime?:string,
+    storeName?:string,
     purchaseId?:{
         buyerName: string,
     productName: string,

@@ -3,24 +3,21 @@ import { store } from './types/storeInfoTypes';
 import { Buyer } from './types/buyertypes';
 import { Method } from 'axios';
 import { BaseQueryResult } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-
 let token = localStorage.getItem('accessToken');
 
 interface responseTypes {
+    
     accessToken: string
     message: string
 }
 
 const transformResponseFunc = () => {
-    return (response: responseTypes) => {
-        console.log(response, 'response');
-
+        return (response: responseTypes) => {
+        
         if (response.accessToken) {
-            localStorage.setItem('accessToken', response.accessToken);
+          localStorage.setItem('accessToken',  response.accessToken )
         }
-
-
-        return response;
+       return response;
 
     }
 }

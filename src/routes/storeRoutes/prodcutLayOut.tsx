@@ -1,10 +1,35 @@
-import React from 'react'
-import { NavLink, Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Suspense } from 'react'
+import { useLazyGetSalNotficaionsQuery } from '../../reduxStore/karyanaStore/saleNotificationSlice';
 
 
+ let token = localStorage.getItem('accessToken')
+ 
+const ProductLayOut = ({ userId, isNewNotfn}: { userId: number, isNewNotfn: number }) => {
+   const [notifns, setNotifns] = useState<any>();
+   const [getNotifications, result] = useLazyGetSalNotficaionsQuery()
+   
+   let getND = async () => {
+      let count: Number = 0;
+      let { data } = await getNotifications('')
+      data?.map(({ notfiedPurchases: { purchaseCount } }) => {
+         count = Number(purchaseCount) + Number(count)
+      })
+      
+      setNotifns(count)
 
-const ProductLayOut = ({ userId }:{userId:number}) => {
+   }
+   
+   
+   let { pathname } = useLocation()
+   useEffect(() => {
+      
+      console.log(isNewNotfn,'count');
+      getND()
+   }, [pathname, isNewNotfn])
+  
+
 
    return (
       <div className='links-container'>
@@ -15,7 +40,14 @@ const ProductLayOut = ({ userId }:{userId:number}) => {
                   <button>Product List</button>
                </NavLink>
                <NavLink to='CreateProduct'>
+                   {
+                        notifns !== 0 &&  
+                       <div className="header-orders-notification">
+                        <p>{notifns}</p>
+                     </div>
+                  }
                   <button>Create Product</button>
+                  
                </NavLink>
                <NavLink to='Buyers'>
                   <button>Buyers</button>
@@ -23,11 +55,11 @@ const ProductLayOut = ({ userId }:{userId:number}) => {
             </div>
 
          </div>
-            <div className="products-det-body">
-               <Suspense fallback='loading resources...'>
-                  <Outlet context={{ userId }} />
-               </Suspense>
-            </div>
+         <div className="products-det-body">
+            <Suspense fallback='loading resources...'>
+               <Outlet context={{ userId }} />
+            </Suspense>
+         </div>
       </div>
    )
 

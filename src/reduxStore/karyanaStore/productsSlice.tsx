@@ -14,13 +14,14 @@ export const fetchProductSlice = createApi({
       }
 
    }),
-   keepUnusedDataFor: 30,
+   keepUnusedDataFor: 0,
    
    tagTypes:['Products'],
          endpoints:(builder)=>({
              getProducts:builder.query<inputProducttypes[], string | undefined>(
                {query: (storeId)=>storeId?.length? `/getProducts/${storeId}`:'/getProducts',
-               providesTags:['Products']
+                 providesTags:['Products']
+               ,keepUnusedDataFor: 0
             }),
 
              createOrUpdateProduct:builder.mutation({
@@ -43,7 +44,7 @@ export const fetchProductSlice = createApi({
       })
          
    export const {
-      useGetProductsQuery, 
+      useLazyGetProductsQuery, 
       useCreateOrUpdateProductMutation, 
       useDeleteProductMutation
      } = fetchProductSlice

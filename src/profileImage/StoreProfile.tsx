@@ -6,13 +6,15 @@ import ProfilePopUp from './ProfilePopUp'
 import { useErrorBoundary } from 'react-error-boundary'
 
 
-let url = 'http://localhost:3003/'
+let url = 'http://localhost:3003'
 
 const StoreProfile = () => {
 
-   const [storeProfile, setStoreProfie] = useState<{}>({});
+   const [storeProfile, setStoreProfie] = useState<any>();
    const [isPopUp, setIsPopUp] = useState<boolean>(false);
    const { showBoundary } = useErrorBoundary()
+    
+    
    function openPopUp() {
       setIsPopUp(!isPopUp);
    }
@@ -22,8 +24,7 @@ const StoreProfile = () => {
       let result = async () => {
          try {
             let data = await axiosApi.get('/getStoreProfile')
-            console.log(`${url}${data.data}`, 'image');
-            data.data === '' ? setStoreProfie({}) : setStoreProfie(data.data)
+            data.data === '' ? setStoreProfie(null) : setStoreProfie(data.data)
 
          } catch (error) {
             showBoundary(error)
@@ -39,7 +40,7 @@ const StoreProfile = () => {
    const [fetchStNm, setFetchStNm] = useState<string>('');
 
    useEffect(() => {
-
+         
       const fetchStoreName = async () => {
          const { data } = await axiosApi.get('/getStoreName')
          setFetchStNm(data)
@@ -57,8 +58,8 @@ const StoreProfile = () => {
          <div className="profile-img">
 
             <img
-               // src={storeProfile ? `${url}${storeProfile}` : avatar}
-               src={avatar}
+               src={storeProfile ? `${url}${storeProfile}` : avatar}
+               // src={avatar}
                alt="upload proile"
                className='img'
                onClick={openPopUp}
@@ -68,7 +69,7 @@ const StoreProfile = () => {
             <p>{fetchStNm} </p>
          </div>
          {isPopUp && <ProfilePopUp
-            renderProfile={(file: {}) => { setStoreProfie(file) }}
+            renderProfile={(file) => { setStoreProfie(file) }}
             closePopUp={(setFalse: boolean) => { setIsPopUp(setFalse) }}
             storeProfile={storeProfile}
             avatar={avatar}

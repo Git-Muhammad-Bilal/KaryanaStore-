@@ -13,6 +13,7 @@ p {
      font-weight:600;
 }
 
+
 .productList-table-cont {
      padding-top: 10px;
      height: 160px;
@@ -22,9 +23,29 @@ p {
      justify-content: space-between;
      box-shadow: 6px 6px 0.10px rgba(0, 0, 0, 0.16);
      background-color: rgba(226, 226, 226, 0.381);
-
+     position: relative;
+     
 }
 
+.orders-notification{
+   position: absolute;
+   right: 25px;
+   bottom: 15px;
+   background-color: red;
+   width: 20px;
+   height: 20px;
+   border-radius: 20px;
+}
+
+.no-nofitifications{
+     display: none;
+}
+
+.orders-notification p{
+     color: white;
+     margin-top: 2px;
+     margin-left: 6px;
+}
 .header {
      width: 100%;
      margin-top: 10px;

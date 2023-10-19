@@ -12,7 +12,8 @@ export interface inputProducttypes{
     cost: Number,
     price: Number,
      _id: Number,
-    userId: Number
+    userId: Number,
+    storeName?: string,
 
 }
 

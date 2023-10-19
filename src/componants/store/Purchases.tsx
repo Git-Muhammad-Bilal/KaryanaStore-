@@ -1,23 +1,44 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useLocation, useParams } from 'react-router-dom';
 import RenderPurchases from './RenderPurchases';
 import { useBase64Query } from '../../hooks/useBase64Query';
 import { useErrorBoundary } from 'react-error-boundary';
 import "../../karyanaStoreStyless/buyerInfo.css"
-import { useGetPurchasesQuery } from '../../reduxStore/karyanaStore/purchaseSlice';
-import { QuerydataTypes } from '../../hooks/quyeryDataTypes';
-const Purchases = () => {
+import { useLazyGetPurchasesQuery } from '../../reduxStore/karyanaStore/purchaseSlice';
+import io from 'socket.io-client';
+const jwt = localStorage.getItem('accessToken')
 
+const socketio = io('http://localhost:3003', {
+   auth:{jwt}
+   
+})
+
+const Purchases = () => {
+    const [newSale, setNewSale] = useState<{}[]>([])
     let { productId } = useParams();
     const { showBoundary } = useErrorBoundary()
     const { queryData, genPath } = useBase64Query();
-    const { data , isError, error } = useGetPurchasesQuery(productId)
-    
-     let  purchases: [] = data
-     console.log(purchases, 'puras;kjfsdafkj');
-     
+    let pathname = useLocation()
+    const [getSales, result] = useLazyGetPurchasesQuery()
+  
+    useEffect(()=>{
+    if (!newSale.length) {
+        
+        getSales(productId)
+    }
+
+  },[])
+    const { data = [], isError, error } = result
     isError && showBoundary(error)
-   
+     
+    socketio.on('order', async (arg: []) => {
+        let { data } = await getSales(productId)
+        setNewSale(data)
+    })
+
+
+
+
 
     return (
         <div className='purchaes-container'>
@@ -64,7 +85,7 @@ const Purchases = () => {
             </div>
             <div className='purchaes-list'>
 
-                <RenderPurchases purchases={purchases} />
+                <RenderPurchases purchases={newSale.length ? newSale : data} />
             </div>
 
 

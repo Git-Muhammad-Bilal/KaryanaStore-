@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 let token = localStorage.getItem('accessToken');
+console.log(token, 'buyersssss');
+
 export const purchaesSlice = createApi({
     reducerPath: 'purchaesSlice',
     baseQuery: fetchBaseQuery({
@@ -11,17 +13,18 @@ export const purchaesSlice = createApi({
         }
 
     }),
-    keepUnusedDataFor: 10,
-
+    keepUnusedDataFor: 0,
+    
     tagTypes: ['Purchases'],
     endpoints: (builder) => ({
         getPurchases: builder.query(
             {
                 query: (productId) => `/getPurchases/${productId}`,
-                providesTags: ['Purchases']
+                providesTags: ['Purchases'],
+                keepUnusedDataFor: 0
             }),
-
-        createPurchase: builder.mutation({
+            
+            createPurchase: builder.mutation({
             query: (product) => ({
                 url: '/createPurchase',
                 method: 'post',
@@ -34,14 +37,15 @@ export const purchaesSlice = createApi({
                 url: `/deletePurchaseFromAproduct/${purchaseId}`,
                 method: 'delete',
             }),
-            invalidatesTags: ['Purchases']
+            invalidatesTags: ['Purchases'],
+            
         })
 
     })
 })
 
 export const {
-    useGetPurchasesQuery,
+    useLazyGetPurchasesQuery,
     useCreatePurchaseMutation,
     useDeletePurchaseMutation
 } = purchaesSlice

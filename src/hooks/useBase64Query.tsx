@@ -32,7 +32,7 @@ export const useBase64Query = () => {
 
     const navigateTo = (path: string, minuOne: number | null) => {
         minuOne ? navigate(minuOne) :
-            navigate(genPath(path));
+            navigate(genPath(path), {replace:true});
     }
     return { searchParams, queryData, setQuery, navigateTo, genPath }
 

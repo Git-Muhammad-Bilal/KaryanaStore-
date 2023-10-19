@@ -3,28 +3,27 @@ import axiosApi from '../axios/axiosApi'
 import '../karyanaStoreStyless/profile.css'
 import { useErrorBoundary } from 'react-error-boundary'
 import { JsxElement } from 'typescript'
-let url = 'http://localhost:3003/'
+let url = 'http://localhost:3003'
 const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
-    closePopUp: (b: boolean) => void, renderProfile: (fn: string) => void, storeProfile: {}, avatar: string
+    closePopUp: (b: boolean) => void, renderProfile: (fn: any) => any, storeProfile: {}, avatar: string
 }) => {
 
     interface imgTypes {
-        uploadImg: string | Blob 
+        selectedImg: string | Blob | FileList | null
         urlUploadImg?: Blob | MediaSource
-        File:string | File
-        }
+        File: string | File
+    }
 
-    const [uploadImg, setUploadImg] = useState<imgTypes >({} as imgTypes);
+    const [uploadImg, setUploadImg] = useState<any>('');
     const [isSelctImg, setIsSelectImg] = useState<boolean>(false)
     const { showBoundary } = useErrorBoundary()
-    const inputEle= useRef<HTMLInputElement>(null)
-    console.log(storeProfile, 'now');
+    const inputEle = useRef<any>(null)
 
-    function extractFile() {
+                             
+    function extractFile(e: React.ChangeEvent<HTMLInputElement>) {
         
-    //     let img = inputEle?.current?.files
-    //    let x = img.length > 0? img[0]: ''
-    //        setUploadImg(x)
+         let img = inputEle.current?.files
+        setUploadImg(img[0])
 
     }
 
@@ -32,12 +31,12 @@ const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
         setIsSelectImg(true)
     }
 
-    
-    function closepop (ev:MouseEvent)  {
-    
+
+    function closepop(ev: MouseEvent) {
+
         let classNme = ev.target as HTMLLIElement
-            
-             
+
+
         if (!classNme.className.includes('pop') && classNme.className !== 'img') {
             closePopUp(false)
         }
@@ -45,8 +44,8 @@ const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
 
     useEffect(() => {
 
-            document.body.addEventListener('click', closepop)  
-             
+        document.body.addEventListener('click', closepop)
+
         return () => {
             document.body.removeEventListener('click', closepop)
         }
@@ -61,9 +60,13 @@ const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
             }
         }
         let formData = new FormData()
-        formData.append('profileImage', uploadImg.uploadImg)
+        formData.append('profileImage', uploadImg)
         try {
-            let { data }: t = await axiosApi.post('/uploadProfile', formData);
+            let { data } = await axiosApi.post('/uploadProfile', formData);
+            console.log(data, 'dataaaaaa');
+            let x = URL.createObjectURL(data)
+            console.log('urllllllllll', x);
+            
             renderProfile(data.filename)
 
         } catch (error) {
@@ -91,11 +94,13 @@ const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
 
 
     function createSrc() {
-        if (uploadImg.urlUploadImg) {
-            return URL.createObjectURL(uploadImg?.urlUploadImg)
+        
+        if (uploadImg) {
+            return URL.createObjectURL(uploadImg)
         } else {
 
-            return storeProfile ? `${url}${storeProfile}` : avatar
+            // return storeProfile ? `${url}${storeProfile}` : avatar
+            return  avatar
         }
     }
 
@@ -117,7 +122,7 @@ const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
                         className='pop'
                         id="store-profile"
                         accept='image/*'
-                        onChange={extractFile}
+                        onChange={( e: React.ChangeEvent<HTMLInputElement> )=>{extractFile(e)}}
                     />
                 </div>
 

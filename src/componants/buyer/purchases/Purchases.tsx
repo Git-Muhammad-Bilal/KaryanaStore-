@@ -1,43 +1,55 @@
-import React, { useEffect, useState } from 'react'
-import { NavLink, Navigate, useNavigate, useParams } from 'react-router-dom';
-// import RenderPurchases from '../store/RenderPurchases';
-// import { useBase64Query } from '../../hooks/useBase64Query';
-// import { useErrorBoundary } from 'react-error-boundary';
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import axiosApi from '../../../axios/axiosApi';
+import PurchaseList from './purchaseList';
+import { PurchaseTypes } from '../../../hooks/quyeryDataTypes';
 import "../../../karyanaStoreStyless/buyerInfo.css"
 import "../../../karyanaStoreStyless/home.css"
 import "../../../karyanaStoreStyless/productList.css"
-import PurchaseList from './purchaseList';
-// import { useGetPurchasesQuery } from '../../reduxStore/karyanaStore/purchaseSlice';
-// import { QuerydataTypes } from '../../hooks/quyeryDataTypes';
+
+let totalPurchase:number = 0;
+
 const Purchases = () => {
-
-    // let { productId } = useParams();
-    // const { showBoundary } = useErrorBoundary()
-    // const { queryData, genPath } = useBase64Query();
-    // const { data , isError, error } = useGetPurchasesQuery(productId)
-
-    //  let  purchases: [] = data
-    //  console.log(purchases, 'puras;kjfsdafkj');
-
-    // isError && showBoundary(error)
+   
+    const [purchases, setPurchases] = useState<PurchaseTypes[]>({} as PurchaseTypes[]);
+    // const [totalCost, setTotalCost] = useState<number>(totalPurchase);
     
+    
+    useEffect(()=>{
+       let fetchPurch = async ()=>{
+           let {data}= await axiosApi.get('/getPurchases')
+           setPurchases(data);
+       } 
+       return  ()=>{
+           totalPurchase = 0
+           fetchPurch()  
+        }
+       
+    }, [])
+    
+    const deletePruchase =async (id:number) =>{
+       let {data} = await axiosApi.delete(`deletePurchase/${id}`)
+       totalPurchase = 0  
+       setPurchases(data)
+    }
 
-    return (
+   return (
+
         <div className='purchaes-container'>
          <div className='total-spending'>
-              <h1>Totoal Purchases 50343</h1>
+              <h1>Total Purchaes: {totalPurchase}</h1>
          </div>
-         <PurchaseList/>
-          <PurchaseList/>
-          <PurchaseList/>
-          <PurchaseList/>
-          <PurchaseList/>
-          <PurchaseList/>
-          <PurchaseList/>
-          <PurchaseList/>
-          <PurchaseList/>
-          <PurchaseList/>
-          <PurchaseList/>
+         {
+           purchases.length && purchases.map((p:PurchaseTypes, index)=>{
+                    totalPurchase =Number(p.price) + totalPurchase
+                    
+                     
+                    
+            return <PurchaseList key={p._id} purchase = {p}  deletePruchase= {deletePruchase}/>
+
+              })
+         }
+          
         </div>
     )
 }
