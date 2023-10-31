@@ -6,6 +6,7 @@ import { PurchaseTypes } from '../../../hooks/quyeryDataTypes'
 
 
 const PurchaseList =({purchase, deletePruchase}:{purchase:PurchaseTypes,deletePruchase:(id:number)=>void}) => {
+    console.log(purchase,'purchase');
     
   return (
      

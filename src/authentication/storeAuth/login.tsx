@@ -9,8 +9,8 @@ import "../../karyanaStoreStyless/login.css"
 
 const LoginComp = () => {
 
-    const [email, setEmail] = useState('peter@gmail.com')
-    const [password, setPassword] = useState('1234')
+    const [email, setEmail] = useState('x@gmail.com')
+    const [password, setPassword] = useState('123')
     const [userNotFound, setUserNotFound] = useState();
     const { showBoundary } = useErrorBoundary()
     let navigate = useNavigate()
@@ -27,7 +27,8 @@ const LoginComp = () => {
             if (data.err) {
                 setUserNotFound(data.err)
             } else {
-                navigate(`/store/products/ProductList`, { state: data })
+                
+                navigate(`/store/products/ProductList`, {replace:true})
             }
 
         } catch (error) {
@@ -41,7 +42,7 @@ const LoginComp = () => {
     return (
         <div className="login-container">
             <div className="as-buyer">
-                <NavLink to={'/BuyerLogin'}>
+                <NavLink replace to={'/BuyerLogin'}>
                     <button>#Buyer</button>
                 </NavLink>
             </div>
@@ -62,7 +63,7 @@ const LoginComp = () => {
                 <div className="lgn-buttons-cont">
 
                     <button onClick={Login}>Login</button>
-                    <NavLink to='/CreateAccount' ><button>OR CreateStore</button></NavLink>
+                    <NavLink to='/CreateAccount' replace={true} ><button>OR CreateStore</button></NavLink>
                 </div>
 
                 <h2>{userNotFound}</h2>

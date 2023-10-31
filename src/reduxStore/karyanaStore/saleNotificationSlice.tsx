@@ -1,7 +1,9 @@
 
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
+import { localStorageTypes } from '../../axios/axiosApi';
 
-let token = localStorage?.getItem('accessToken');
+let token:any = localStorage?.getItem('accessToken');
+let strg:localStorageTypes = JSON.parse(token)
 export interface salesNotifiTypes{
     notfiedPurchases:{
         purchaseCount:Number,
@@ -15,7 +17,7 @@ export const getSalesNotifications = createApi({
    baseQuery:fetchBaseQuery({
       baseUrl:'http://localhost:3003',
       prepareHeaders:(Headers)=>{
-         Headers.set('token', token || '')
+         Headers.set('token', strg?.accessToken || '')
          return Headers
       }
 

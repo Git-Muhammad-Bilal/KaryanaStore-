@@ -1,18 +1,22 @@
 import axios from "axios";
 
 
-
 const axiosApi = axios.create({
     baseURL: 'http://localhost:3003'
-
+    
 })
 
+
+export interface localStorageTypes{
+   accessToken:string | null,
+   buyerOrStore:string | null,
+}
 axiosApi.interceptors.request.use(function (config) {
     
-    let token = localStorage.getItem('accessToken');
-      
-      
-    config.headers.token = token
+    let localStrg:any = localStorage.getItem('accessToken');
+    let strg:localStorageTypes = JSON.parse(localStrg)
+    
+    config.headers.token = strg?.accessToken
     return config;
     
 }, function (error) {
@@ -20,10 +24,10 @@ axiosApi.interceptors.request.use(function (config) {
 });
 
 axiosApi.interceptors.response.use(function (response) {
-    // console.log(response,'axios')
     
     if (response.data?.accessToken) {
-        localStorage.setItem('accessToken', response.data.accessToken);
+           
+        localStorage.setItem('accessToken', JSON.stringify(response.data)) ;
     }
 
     if (response.data?.message === 'jwt expired') {

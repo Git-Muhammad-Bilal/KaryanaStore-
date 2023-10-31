@@ -22,7 +22,7 @@ const Stores = () => {
     const renderStores = () => {
         return stores?.map((s:store) => {
            const {products, storeName } = s
-            return <div className="store-card-cont">
+            return <div key={s._id} className="store-card-cont">
                 <div className="store-info-cont">
                     <div className="store-profile-cont">
                         <img src='/download.png' alt="StoreProfile" />

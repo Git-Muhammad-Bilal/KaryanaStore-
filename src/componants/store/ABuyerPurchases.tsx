@@ -1,7 +1,7 @@
 import axiosApi from '../../axios/axiosApi';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import RenderPurchases from './RenderPurchases';
+import RenderSales from './RenderSales';
 import "../../karyanaStoreStyless/buyerInfo.css"
 // import { QuerydataTypes } from '../../hooks/quyeryDataTypes';
 
@@ -10,17 +10,24 @@ const ABuyerPurchases = () => {
 
     const [products, setProducts] = useState<[]>([]);
     const [purchasesOfABuyer, setPurchasesOfABuyer] = useState<[]>([]);
-    let { buyerId } = useParams<string>()
+    let id = useParams<string>()
+     
+    console.log(id, 'id');
 
+     
     useEffect(() => {
 
         let fetchPurchasesOfABuyer = async () => {
             try {
-                let { data } = await axiosApi.get(`/getBuyersPurchases/${buyerId}`)
+                let { data } = await axiosApi.get(`/getBuyersPurchases/${id}`)
+                console.log(data,'data');
+                
                 console.log(data[0].purchases[0].purchaseId);
                 setPurchasesOfABuyer(data[0].purchases)
                 
                 let result = await axiosApi.get(`/getProducts`)
+               console.log(result,'result');
+               
                 setProducts(result.data)
 
             } catch (error) {
@@ -28,17 +35,17 @@ const ABuyerPurchases = () => {
             }
         }
 
-        return () => {
-            fetchPurchasesOfABuyer()
-        }
-    }, [buyerId]);
+        fetchPurchasesOfABuyer()
+        
+    }, [id]);
 
 
     return (
         <div className='Abuyer-purchases-cont'>
-            <RenderPurchases
+            <RenderSales
                 purchases={purchasesOfABuyer}
                 productsFromBuyers={products}
+                
             />
         </div>
 

@@ -5,7 +5,7 @@ import axiosApi from '../axios/axiosApi'
 import ProfilePopUp from './ProfilePopUp'
 import { useErrorBoundary } from 'react-error-boundary'
 
-
+let token = localStorage.getItem('accessToken')
 let url = 'http://localhost:3003'
 
 const StoreProfile = () => {
@@ -31,9 +31,8 @@ const StoreProfile = () => {
 
          }
       }
-      return () => {
-         result()
-      }
+      result()
+      
 
    }, [])
 
@@ -46,9 +45,11 @@ const StoreProfile = () => {
          setFetchStNm(data)
       }
 
-      return () => {
+      if (token) {
          fetchStoreName()
+         
       }
+      
 
    }, [])
 

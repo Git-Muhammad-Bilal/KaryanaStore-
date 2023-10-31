@@ -22,3 +22,11 @@ export interface BuyerInfoTypes {
         purchases:[],
         _id:number,   
  }
+
+export interface extedndedProductTypes extends inputProducttypes{
+    notfiedPurchases:{
+        productId: string,
+        purchaseCount: string
+
+    } 
+}

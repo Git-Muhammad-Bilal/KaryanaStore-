@@ -1,86 +1,60 @@
 
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
-import "../../karyanaStoreStyless/productList.css"
-import { useLazyGetProductsQuery } from '../../reduxStore/karyanaStore/productsSlice';
-import { useLazyGetSalNotficaionsQuery } from '../../reduxStore/karyanaStore/saleNotificationSlice';
 import MapProductList from './MapProductList';
-
-
 import io from 'socket.io-client';
-const jwt = localStorage.getItem('accessToken')
+import axiosApi, { localStorageTypes } from '../../axios/axiosApi';
+import { extedndedProductTypes } from './storeTypes';
+import "../../karyanaStoreStyless/productList.css"
 
+const jwt:any = localStorage.getItem('accessToken')
+const strg:localStorageTypes = JSON.parse(jwt)
 const socketio = io('http://localhost:3003', {
-   auth:{jwt}
+   auth:{jwt:strg.accessToken},
+   autoConnect:false
    
 })
 
 const ProductLIst = ({setIsNewNotfn}: { setIsNewNotfn:React.Dispatch<React.SetStateAction<number>> }) => {
-    const [notifns, setNotifns] = useState<any>()
+
+    const [products, setProducts] = useState<extedndedProductTypes[]>([])
 
     const { showBoundary } = useErrorBoundary()
-
-    let [getProducts, data] = useLazyGetProductsQuery()
-    data.isError && showBoundary(data.error)
-
-    let [getNotifications, result] = useLazyGetSalNotficaionsQuery();
            
     useEffect(() => {
         let getND = async () => {
-            let data = await getNotifications('');
-            
-            getProducts('');
-            setNotifns(data.data)
+            try {
+                let {data} = await axiosApi.get('/getProducts');
+                setIsNewNotfn(Number(Date.now()))
+                setProducts(data)
+            }catch (error) {
+                showBoundary(error)
+            }  
         }
-
         getND()
+        
+}, [])
 
 
-    }, [])
 
-    // let [getNotifications, result] = useLazyGetSalNotficaionsQuery();
+ 
+let prods = products?.map((p, index) => {
+ 
 
-    // let notificationsData = result.data || [];
-    // let curNotiftn = notificationsData[index]?.notfiedPurchases?.purchaseCount.toString()
-    // let prodid = notificationsData[index]?.notfiedPurchases?.productId?.toString()
-
-    // socketio.on('order', async (arg: []) => {
-    //    let data = await getNotifications('')
-    //    console.log(arg,'data.dataaaa');
-       
-    //    setNotifns(arg) 
-    //    setIsNewNotfn(Number(Date.now()))
-    // })
-
-
-    function allNotifications(index:number) {
-        if (notifns?.length  ) {
-            
-           let notification = notifns[index]?.notfiedPurchases.purchaseCount
-           
-           return  notification == '0'?'':notification
-           
-        }else{
-            return '';
-        }
-
-    }
-
-    let prods = data.data?.map((p, index) => {
-        return <MapProductList product={p}
+       return <MapProductList key={p._id.toString()} product={p}
             index={index}
             socketio={socketio}
-            notifications={allNotifications(index).toString()}
             setIsNewNotfn = {setIsNewNotfn}
+            setProducts={setProducts}
         />
-
+        
     })
 
 
 
     return (
         <div className='product-list-container'>
-            {data.isLoading && <h2>Loading....</h2>}
+            {!products.length && <h2>Loading....</h2>}
             {prods?.length ? prods : <h1>You do not have any Product, add products now!!!!</h1>}
         </div>
     )

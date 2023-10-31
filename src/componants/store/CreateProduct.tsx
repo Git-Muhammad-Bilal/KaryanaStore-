@@ -5,6 +5,7 @@ import { useErrorBoundary } from 'react-error-boundary';
 import { useCreateOrUpdateProductMutation } from '../../reduxStore/karyanaStore/productsSlice';
 import { productsTypes } from './storeTypes';
 import '../../karyanaStoreStyless/createProduct.css'
+import axiosApi from '../../axios/axiosApi';
 
 
 
@@ -12,7 +13,6 @@ import '../../karyanaStoreStyless/createProduct.css'
 
 
 const CreateProduct = () => {
-    // debugger
     let x ={
         productName:'',
         quantity:undefined,
@@ -20,16 +20,25 @@ const CreateProduct = () => {
         price:undefined
     }
     const [productInfo, setProductInfo] = useState<productsTypes >(x);
-    console.log(productInfo, 'outside');
     
     let [requiredField, setRequiredFoields] = useState<productsTypes[]>([]); 
     let [bol, setBol] = useState<boolean>(false);
     let { showBoundary } = useErrorBoundary()
     const { queryData, navigateTo } = useBase64Query()
 
-    const [createOrUpdateProduct] = useCreateOrUpdateProductMutation()
-    // isError && showBoundary(error)
 
+   
+        let createOrUpdateProduct = async (product:productsTypes) => {
+            try {
+             await axiosApi.post('/createOrUpdate',{
+                    ...product
+                });
+                }catch (error) {
+                    
+                showBoundary(error)
+            }  
+        }
+   
     useEffect(() => {
         if (bol) {
             navigateTo(`/store/products/ProductList`, null)
@@ -90,12 +99,9 @@ const CreateProduct = () => {
             return
         }
         if (queryData?._id) {
-            console.log(queryData?._id, 'wkingkjdf');
-            let data = await createOrUpdateProduct({ ...productInfo, _id: queryData?._id })
-            console.log(data, 'fdata');
+            // let data = await createOrUpdateProduct({ ...productInfo, _id: queryData?._id })
             setBol(true)
         } else {
-            console.log(productInfo,'info');
             await createOrUpdateProduct(productInfo)
             setBol(true)
         }
@@ -173,7 +179,6 @@ const CreateProduct = () => {
                     Canceal
                 </NavLink>
                 <button onClick={createAndNavigateToProdList}>
-                    
                     Save Product
                 </button>
 

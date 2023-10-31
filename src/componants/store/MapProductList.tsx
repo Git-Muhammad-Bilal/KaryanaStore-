@@ -1,39 +1,71 @@
-import { generatePath } from 'react-router-dom';
+import { generatePath, useLocation } from 'react-router-dom';
 import { useBase64Query } from '../../hooks/useBase64Query';
 import { useDeleteProductMutation } from '../../reduxStore/karyanaStore/productsSlice';
-import { inputProducttypes } from './storeTypes';
+import { extedndedProductTypes, inputProducttypes } from './storeTypes';
 import { useLazyGetSalNotficaionsQuery } from '../../reduxStore/karyanaStore/saleNotificationSlice';
 import "../../karyanaStoreStyless/productList.css"
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import axiosApi from '../../axios/axiosApi';
 
 
 
 
-
-const MapProductList = ({ product, index, socketio, notifications, setIsNewNotfn }:
+const MapProductList = ({ product, index, socketio, setIsNewNotfn, setProducts }:
     {
-        product: inputProducttypes,
+        product: extedndedProductTypes,
         index: number,
         socketio: any,
-        notifications: string,
-        setIsNewNotfn: React.Dispatch<React.SetStateAction<number>>
+        setIsNewNotfn: React.Dispatch<React.SetStateAction<number>>,
+        setProducts: React.Dispatch<React.SetStateAction<extedndedProductTypes[]>>
     }) => {
-    
-    
-    const { productName, quantity, cost, price, _id, userId } = product;
+
+    const [isConnected, setIsConnected] = useState(socketio.connected)
+    const [newNf, setNf] = useState<any[]>([])
+    const { productName, quantity, cost, price, _id, userId, notfiedPurchases: { productId, purchaseCount } } = product;
     const { setQuery, navigateTo } = useBase64Query();
 
-    let [deleteProduct] = useDeleteProductMutation()
-    let [getNotifications, result] = useLazyGetSalNotficaionsQuery();
+    const deleteProduct = async (id: string) => {
+        let {data} = await axiosApi.delete(`/deleteProduct/${id}`)
+        setProducts(data)
+    }
+    let curNotiftn = newNf[index]?.notfiedPurchases?.purchaseCount.toString()
+    let prodid = newNf[index]?.notfiedPurchases?.productId?.toString()
 
-    let notificationsData = result.data || [];
-    let curNotiftn = notificationsData[index]?.notfiedPurchases?.purchaseCount.toString()
-    let prodid = notificationsData[index]?.notfiedPurchases?.productId?.toString()
+  useEffect(()=>{
+    socketio.connect()   
+       
+    return()=>{
+        socketio.disconnect()
+    }
+   })   
 
-    socketio.on('order', async (arg: []) => {
-        getNotifications('')
-        setIsNewNotfn(Number(Date.now()))
-    })
+    useEffect(() => {
+                 
+            function onConnect() {
+                setIsConnected(true);
+            }
+            
+            function onDisconnect() {
+                setIsConnected(false);
+            }
+           
+            function getNf(arg: any) {
+                setNf(arg)
+                setIsNewNotfn(Number(Date.now()))
+        }
+
+
+        socketio.on('receive', onConnect);
+        socketio.on('receive', onDisconnect);
+        socketio.on('receive', getNf)
+
+        return () => {
+            socketio.off('receive', onConnect);
+            socketio.off('receive', onDisconnect);
+            socketio.off('receive', getNf)
+        }
+    }, [newNf])
+
 
 
 
@@ -45,7 +77,7 @@ const MapProductList = ({ product, index, socketio, notifications, setIsNewNotfn
 
     }
 
-    async function navigateToPurchases() {
+    async function navigateToSales() {
         let ProdInfo = {
             productName,
             cost,
@@ -60,6 +92,7 @@ const MapProductList = ({ product, index, socketio, notifications, setIsNewNotfn
         let path = generatePath(`/store/products/Sales/:productId`, {
             productId: product._id.toString(),
         });
+
         navigateTo(path, null);
     }
 
@@ -67,10 +100,10 @@ const MapProductList = ({ product, index, socketio, notifications, setIsNewNotfn
     return (
         <div key={index} className='productList-table-cont'>
             {
-                notifications || curNotiftn && _id.toString() == prodid ?
-                    <div className={"orders-notification"}>
-                        <p>{curNotiftn || notifications}</p>
-                    </div> 
+                purchaseCount || Number(curNotiftn) ? <div className={"orders-notification"}>
+                    {!curNotiftn && <p>{purchaseCount}</p>}
+                    {curNotiftn && _id.toString() == prodid && <p>{curNotiftn}</p>}
+                </div>
                     : ''
             }
             <div className='header'>
@@ -106,7 +139,7 @@ const MapProductList = ({ product, index, socketio, notifications, setIsNewNotfn
             <div className='productList-btns'>
                 <div>
                     <button className='buy-product'
-                        onClick={() => { navigateToPurchases() }}>Sales</button>
+                        onClick={() => { navigateToSales() }}>Sales</button>
                 </div>
 
                 <div>
@@ -114,7 +147,7 @@ const MapProductList = ({ product, index, socketio, notifications, setIsNewNotfn
                 </div>
 
                 <div>
-                    <button onClick={() => { deleteProduct(_id) }}>delete</button>
+                    <button onClick={() => { deleteProduct(_id.toString()) }}>delete</button>
                 </div>
             </div>
 

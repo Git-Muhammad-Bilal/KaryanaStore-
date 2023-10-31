@@ -25,7 +25,6 @@ const ProductLayOut = ({ userId, isNewNotfn}: { userId: number, isNewNotfn: numb
    let { pathname } = useLocation()
    useEffect(() => {
       
-      console.log(isNewNotfn,'count');
       getND()
    }, [pathname, isNewNotfn])
   

@@ -1,21 +1,24 @@
-import { FetchArgs, createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { store } from './types/storeInfoTypes';
+import {  createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Buyer } from './types/buyertypes';
-import { Method } from 'axios';
-import { BaseQueryResult } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-let token = localStorage.getItem('accessToken');
+import { localStorageTypes } from '../../axios/axiosApi';
+
 
 interface responseTypes {
     
-    accessToken: string
     message: string
+    data:{
+        accessToken: string
+        buyerOrstore:string
+    }
 }
 
 const transformResponseFunc = () => {
         return (response: responseTypes) => {
+        console.log(response,'response');
         
-        if (response.accessToken) {
-          localStorage.setItem('accessToken',  response.accessToken )
+        if (response) {
+            localStorage.setItem('accessToken', JSON.stringify(response)) ;
+          
         }
        return response;
 
@@ -26,11 +29,6 @@ export const createBuyerSlice = createApi({
     reducerPath: 'createBuyerSlice',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:3003',
-        prepareHeaders: (Headers) => {
-            Headers.set('token', token || '')
-            return Headers
-        }
-
     }),
 
     tagTypes: ['buyer'],

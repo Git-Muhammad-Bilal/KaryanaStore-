@@ -65,3 +65,15 @@
 }
 
 
+
+.userName{
+    position: absolute;
+    top: 17px; 
+    right: 280px; 
+}
+
+.userName p{
+    color: white;
+    font-size: 22px;
+    font-family: 'Times New Roman', Times, serif;
+}

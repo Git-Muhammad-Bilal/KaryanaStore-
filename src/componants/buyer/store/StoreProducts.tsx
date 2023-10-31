@@ -8,7 +8,7 @@ import "../../../karyanaStoreStyless/buyerStyles/orders.css"
 import "../../../karyanaStoreStyless/buyerStyles/storeProducts.css"
 
 
-const StoreProducts = () => {
+const StoreProducts = ({getBName}:{getBName?:string}) => {
 
   const [quantityField, setQuantityField] = useState<Number | null>(null);
    let [hasOrdered, setHasOrdered] =useState<string[]>([])
@@ -30,6 +30,7 @@ const StoreProducts = () => {
   quantityField={quantityField}
   setQuantityField={setQuantityField} 
   hasOrdered ={hasOrdered}
+  
   />
 
   );
@@ -43,7 +44,7 @@ const StoreProducts = () => {
       </div>
 
       <div className='order-card'>
-        <OrdersCart storeId={storeId} setHasOrdered={setHasOrdered} hasOrdered ={hasOrdered}  />
+        <OrdersCart storeId={storeId} setHasOrdered={setHasOrdered} hasOrdered ={hasOrdered}  getBName={getBName} />
       </div>
     </div>
   )

@@ -22,7 +22,7 @@ const cartProductSlice = createSlice({
               state.cartProduct.push(action.payload);
               },
           cancealCartItem: (state:cartProdTypes , action: PayloadAction<string[]> ) => {
-                state.cartProduct = state.cartProduct.filter((p)=> action.payload.includes(p._id.toString()))
+                state.cartProduct = state.cartProduct.filter((p)=> !action.payload.includes(p._id.toString()))
                 
                 return state
           },

@@ -4,6 +4,7 @@ import { inputProducttypes, productsTypes } from '../../store/storeTypes'
 import { cancealCartItem, extractProductInfo } from '../../../reduxStore/Buyer/AddToCartSlice'
 import { useBase64Query } from '../../../hooks/useBase64Query'
 import { validateHeaderValue } from 'http'
+import { useAppDispatch } from '../../../reduxStore/store/StoreTypes'
 
 function StoreProductCard({ product, quantityField, setQuantityField, hasOrdered }:
 
@@ -11,7 +12,8 @@ function StoreProductCard({ product, quantityField, setQuantityField, hasOrdered
         product: inputProducttypes,
         quantityField: null | Number,
         setQuantityField: React.Dispatch<React.SetStateAction<null | Number>>
-        hasOrdered: string[]
+        hasOrdered: string[],
+        // getBName:string
 
 
     }) {
@@ -23,7 +25,7 @@ function StoreProductCard({ product, quantityField, setQuantityField, hasOrdered
     const { productName, quantity, cost, price, _id, userId } = product
 
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { queryData } = useBase64Query();
     const { storeName, products } = queryData;
 

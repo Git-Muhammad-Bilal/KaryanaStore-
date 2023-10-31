@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 let token = localStorage.getItem('accessToken');
-console.log(token, 'buyersssss');
 
 export const purchaesSlice = createApi({
     reducerPath: 'purchaesSlice',

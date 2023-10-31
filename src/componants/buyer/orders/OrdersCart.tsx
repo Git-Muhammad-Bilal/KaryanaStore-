@@ -6,38 +6,40 @@ import { inputProducttypes } from '../../store/storeTypes';
 import { cancealCartItem, cartProdTypes, extractProductInfo } from '../../../reduxStore/Buyer/AddToCartSlice';
 import CreateProduct from '../../store/CreateProduct';
 import io from 'socket.io-client';
-const jwt = localStorage.getItem('accessToken')
-console.log(jwt, 'jwt');
+import { localStorageTypes } from '../../../axios/axiosApi';
+import { useAppSlector } from '../../../reduxStore/store/StoreTypes';
 
-
-
+const token:any  = localStorage.getItem('accessToken') 
+ const strg:localStorageTypes = JSON.parse(token)
 const socketio = io('http://localhost:3003', {
-  auth: { jwt }
+  auth: { jwt:strg?.accessToken }
 
 })
 
 
 
-const OrdersCart = ({ storeId, setHasOrdered, hasOrdered }:
+const OrdersCart = ({ storeId, setHasOrdered, hasOrdered, getBName }:
   {
     storeId?: string,
     setHasOrdered?: React.Dispatch<React.SetStateAction<string[]>> | any,
     hasOrdered?: string[],
+    getBName?: string,
   }) => {
+console.log(getBName,'bname');
 
   let cn = !storeId?.length ? "order-cart-cont " : "order-cart-for-prods"
   
-  let data = useSelector(({ cartProduct }) => cartProduct)
+  let data = useAppSlector(({ cartProduct}) => cartProduct)
+  // console.log(data, 'cart');
   
   
   const { queryData } = useBase64Query();
   const { storeName, products } = queryData;
   
   const orderPurchases = () => {
-    
-    socketio.emit('order', data.cartProduct,(res:string)=>{
       
-      console.log(data.cartProduct, 'order4');
+    socketio.emit('order',  [data.cartProduct, getBName],(res:string)=>{
+      
       setHasOrdered([res])
       
     }) 

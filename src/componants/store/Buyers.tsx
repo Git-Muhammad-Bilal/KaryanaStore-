@@ -19,6 +19,8 @@ const BuyerInfo = () => {
             
             try {
                 let { data } = await axiosApi.get(`/getBuyers`)
+                 console.log(data,'data');
+                 
                 console.log(data);
                 
                 if (data.length) {
@@ -32,9 +34,8 @@ const BuyerInfo = () => {
             }
         }
 
-        return () => {
-            fetchBuyers()
-        }
+        fetchBuyers()
+       
     }, []);
 
 

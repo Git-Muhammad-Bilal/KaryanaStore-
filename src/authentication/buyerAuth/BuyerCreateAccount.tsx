@@ -16,6 +16,7 @@ export const BuyerCreateAccount = () => {
   });
   
   let navigate = useNavigate();
+  
   const [createBuyerAccount] = useCreateBuyerAccountMutation()
 
   const setBuyerDet = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +35,7 @@ export const BuyerCreateAccount = () => {
 
   const createBuyer =async ()=>{
       await createBuyerAccount(buyerDetail)
-      navigate('/Buyer/Purchases')
+      navigate('/Buyer/Purchases', {replace:true})
   }
 
 
@@ -42,7 +43,7 @@ export const BuyerCreateAccount = () => {
   return (
     <div className="createAccount-container">
       <div className="as-buyer">
-        <NavLink to='/'>
+        <NavLink replace to='/'>
           <button>#Store</button>
         </NavLink>
       </div>
@@ -81,7 +82,7 @@ export const BuyerCreateAccount = () => {
 
         <div className="creAcc-btn-cont">
           <button onClick={createBuyer}>Sign Up</button>
-          <NavLink to="/BuyerLogin"><button>Or Login</button></NavLink>
+          <NavLink replace  to="/BuyerLogin"><button>Or Login</button></NavLink>
         </div>
       </div>
     </div>

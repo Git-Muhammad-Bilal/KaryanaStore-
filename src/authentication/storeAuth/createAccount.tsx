@@ -29,7 +29,7 @@ const CreateAccount = () => {
                     password
                 }
             )
-            navigate(`/store/products/ProductList`)
+            navigate(`/store/products/ProductList`, {replace:true})
         } catch (error) {
             showBoundary(error)
 
@@ -42,7 +42,7 @@ const CreateAccount = () => {
     return (
         <div className="createAccount-container">
             <div className="as-buyer">
-                <NavLink to='/BuyerLogin'>
+                <NavLink replace to='/BuyerLogin'>
                     <button>#Buyer</button>
                 </NavLink>
             </div>
@@ -86,7 +86,7 @@ const CreateAccount = () => {
                 <div className="creAcc-btn-cont">
 
                     <button onClick={CreateAccount}>Sign Up</button>
-                    <NavLink to="/"   ><button>Or Login</button></NavLink>
+                    <NavLink to="/"  replace   ><button>Or Login</button></NavLink>
                 </div>
             </div>
         </div>

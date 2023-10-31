@@ -1,29 +1,32 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { store } from './types/storeInfoTypes';
+import { localStorageTypes } from '../../axios/axiosApi';
 
-let token = localStorage.getItem('accessToken');
+let token:any = localStorage.getItem('accessToken');
+let strg: localStorageTypes = JSON.parse(token);
 
 export const fetchStoresSlice = createApi({
     reducerPath: 'fetchStoresSlice',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:3003',
         prepareHeaders: (Headers) => {
-            Headers.set('token', token || '')
+            Headers.set('token', strg?.accessToken || '')
             return Headers
         }
 
     }),
-    // keepUnusedDataFor: 10,
+    keepUnusedDataFor: 0,
 
     tagTypes: ['stores'],
     endpoints: (builder) =>({
         getStores: builder.query<store[], number>(
             {
                 query: () => `/getStores`,
-                providesTags:['stores']
+                providesTags:['stores'],
+                keepUnusedDataFor:0,
             }),
 
-       
+                     
 
     })
 })

@@ -1,24 +1,22 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-// import { NavLink, useNavigate } from "react-router-dom";
-import "../../karyanaStoreStyless/login.css"
 import { useLoginBuyerMutation } from "../../reduxStore/Buyer/createBuyerSlice";
 import { Buyer } from "../../reduxStore/Buyer/types/buyertypes";
-import ProductLIst from "../../componants/store/ProductList";
+import "../../karyanaStoreStyless/login.css"
 
 
 
 const BuyerLogin = () => {
 
+
     const [buyerDetail, setBuyerDetail] = useState<Buyer>({
-        email: 'bd@gmail.com',
+        email: 'b@gmail.com',
         password: '123'
     });
-
+    
     let navigate = useNavigate();
     const data = useLoginBuyerMutation()
-    console.log(data, 'databuyerlogin');
-    
+     
       const [loginBuyer] = data;
     const setBuyerDet = (e: React.ChangeEvent<HTMLInputElement>) => {
         
@@ -36,18 +34,16 @@ const BuyerLogin = () => {
 
 
 
-    const navigateToHome = () => {
-       let okay = loginBuyer(buyerDetail)
-          console.log(okay, 'okay');
-            
-       navigate('/Buyer/Purchases')
+    const navigateToHome =async () => {
+       await loginBuyer(buyerDetail)
+       navigate('/Buyer/Purchases', {replace:true})
 
     }
     return (
 
         <div className="login-container">
             <div className="as-buyer">
-                <NavLink to='/'>
+                <NavLink replace to='/'>
                     <button>#Store</button>
                 </NavLink>
             </div>
@@ -73,7 +69,7 @@ const BuyerLogin = () => {
                 <div className="lgn-buttons-cont">
 
                     <button onClick={navigateToHome}>Login</button>
-                    <NavLink to='/BuyerCreateAccount' ><button>CreateAccount</button></NavLink>
+                    <NavLink replace to='/BuyerCreateAccount' ><button>CreateAccount</button></NavLink>
                 </div>
 
                 {/* <h2>{userNotFound}</h2> */}

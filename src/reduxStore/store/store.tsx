@@ -3,20 +3,22 @@ import { fetchProductSlice } from "../karyanaStore/productsSlice";
 import { purchaesSlice } from "../karyanaStore/purchaseSlice";
 import {fetchStoresSlice} from "../Buyer/fetchStoresSlice";
 import { createBuyerSlice } from "../Buyer/createBuyerSlice";
-import  cartProductSlice  from "../Buyer/AddToCartSlice";
 import {getSalesNotifications} from "../karyanaStore/saleNotificationSlice";
-// import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import  cartProductSlice  from "../Buyer/AddToCartSlice";
+import BuyerNameSlice from "../Buyer/BuyerNameSlice";
 
-export let store = configureStore({
+
+ let store  = configureStore({
     reducer:{
+        
         cartProduct:cartProductSlice,
+        getBuyerName:BuyerNameSlice,
         [createBuyerSlice.reducerPath]: createBuyerSlice.reducer,
         [fetchProductSlice.reducerPath]: fetchProductSlice.reducer,
         [purchaesSlice.reducerPath]: purchaesSlice.reducer,
         [fetchStoresSlice.reducerPath]: fetchStoresSlice.reducer,
         [getSalesNotifications.reducerPath]:getSalesNotifications.reducer
-        // [createBuyerSlice.reducerPath]: createBuyerSlice.reducer,
-        // [createBuyerSlice.reducerPath]: createBuyerSlice.reducer,
+       
     },
 
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat( 
@@ -31,6 +33,7 @@ export let store = configureStore({
 })
 
 
-// setupListeners(store.dispatch)
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
 
-
+export default store;

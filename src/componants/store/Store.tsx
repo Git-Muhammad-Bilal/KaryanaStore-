@@ -4,10 +4,16 @@ import LogOutComp from '../../authentication/logout';
 import StoreProfile from '../../profileImage/StoreProfile';
 import "../../karyanaStoreStyless/home.css"
 import "../../karyanaStoreStyless/createAccount.css"
+import { log } from 'console';
+import { Navigate } from 'react-router-dom';
 
-const Home = () => {
+const Store = () => {
    
-
+// let strg = localStorage.getItem('accessToken')
+  
+// if (!strg) {
+//  return <Navigate to ='/'/>
+// }
 
 
     return (
@@ -31,4 +37,4 @@ const Home = () => {
     );
 }
 
-export default Home;
+export default Store;

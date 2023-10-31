@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axiosApi from '../axios/axiosApi';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useErrorBoundary } from 'react-error-boundary';
-import { log } from 'console';
 
 
 const LogOutComp = () => {
 
+
+    let { pathname } = useLocation()
     const { showBoundary } = useErrorBoundary()
     let userId = useParams()
+    let navigation = useNavigate()
     const logout = async () => {
-        console.log('asdljk;fsadj;klfsdl;jksdfkl;j');
-        
+
         try {
             await axiosApi.post('/logout',
                 { id: userId.id, }
@@ -21,12 +22,14 @@ const LogOutComp = () => {
             showBoundary(error)
         }
     }
-
     return (
         <div className='logout-Container'>
-            <NavLink to="/" >
+
+            <NavLink replace to={pathname.includes('/Buyer') ? '/BuyerLogin' : "/"}  >
                 <button onClick={logout}>Logout</button>
             </NavLink>
+            <div >
+            </div>
 
         </div>
     );

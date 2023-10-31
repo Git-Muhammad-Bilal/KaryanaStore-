@@ -3,19 +3,18 @@ import { useLocation, useParams } from 'react-router-dom';
 import AddModal from '../AddModal';
 import "../../../karyanaStoreStyless/AddModal.css"
 import { useErrorBoundary } from 'react-error-boundary';
-import { useCreatePurchaseMutation } from '../../../reduxStore/karyanaStore/purchaseSlice';
 import {BuyerTypes, AddQuanityTypes} from './types';
+import axiosApi from '../../../axios/axiosApi';
 const CreatePurchase = () => {
 
     const { showBoundary } = useErrorBoundary()
     const { queryData, setQuery, navigateTo } = useBase64Query()
     let { productId } = useParams();
-    const [createPurchase] = useCreatePurchaseMutation()
     const { pathname } = useLocation();
 
     async function savePurchases({ buyerName, quantity, price }:BuyerTypes) {
         try {
-           const data = await createPurchase(
+           const data = await axiosApi.post('/createPurchase',
                 {
                     productName: queryData?.productName,
                     buyerName,
