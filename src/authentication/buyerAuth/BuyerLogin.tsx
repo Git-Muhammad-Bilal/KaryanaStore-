@@ -10,19 +10,21 @@ const BuyerLogin = () => {
 
 
     const [buyerDetail, setBuyerDetail] = useState<Buyer>({
-        email: 'b@gmail.com',
-        password: '123'
+        email: '',
+        password: ''
     });
-    
+
+    const [userNotFound, setUserNotFound] = useState();
+
     let navigate = useNavigate();
     const data = useLoginBuyerMutation()
-     
-      const [loginBuyer] = data;
+
+    const [loginBuyer] = data;
     const setBuyerDet = (e: React.ChangeEvent<HTMLInputElement>) => {
-        
+
         const { value, name } = e.target
         for (const key in buyerDetail) {
-              
+
             if (key === name) {
                 setBuyerDetail((previousState: Buyer) => {
                     return { ...previousState, [key]: value }
@@ -34,9 +36,9 @@ const BuyerLogin = () => {
 
 
 
-    const navigateToHome =async () => {
-       await loginBuyer(buyerDetail)
-       navigate('/Buyer/Purchases', {replace:true})
+    const navigateToHome = async () => {
+        let result: any = await loginBuyer(buyerDetail)
+        result.error ? setUserNotFound(result.error.data) : navigate('/Buyer/Purchases', { replace: true })
 
     }
     return (
@@ -72,7 +74,7 @@ const BuyerLogin = () => {
                     <NavLink replace to='/BuyerCreateAccount' ><button>CreateAccount</button></NavLink>
                 </div>
 
-                {/* <h2>{userNotFound}</h2> */}
+                <h2>{userNotFound} </h2>
 
             </div>
 

@@ -19,12 +19,9 @@ const Purchases = () => {
 
             setPurchases(data);
         }
-        // let token = localStorage.getItem('accessToken');
-        // if (token) {
-            fetchPurch()
-        // }
-        // return () => {
-        // }
+
+        fetchPurch()
+
     }, [])
 
     const deletePruchase = async (id: number) => {

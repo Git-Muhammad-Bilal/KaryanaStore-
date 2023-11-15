@@ -10,7 +10,7 @@ const LogOutComp = () => {
     let { pathname } = useLocation()
     const { showBoundary } = useErrorBoundary()
     let userId = useParams()
-    let navigation = useNavigate()
+    
     const logout = async () => {
 
         try {

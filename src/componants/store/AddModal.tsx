@@ -9,32 +9,32 @@ import "../../karyanaStoreStyless/AddModal.css"
 
 function AddProductModal({ savePurchases, addQuanity }:
     {
-        savePurchases: (sp: BuyerTypes) => void, 
+        savePurchases: (sp: BuyerTypes) => void,
         addQuanity: (object: AddQuanityTypes) => void
     }) {
 
     const { setQuery, navigateTo, queryData } = useBase64Query();
-    const {productDet, purchase} = queryData
-    
+    const { productDet, purchase } = queryData
+
     let prams = useParams<string>();
-    let buyerOrProductId = prams.buyerOrProductId || prams.productId;    
-    
+    let buyerOrProductId = prams.buyerOrProductId || prams.productId;
+
 
     const [buyerName, setBuyerName] = useState<string>('');
     const [productName, setProductName] = useState<string>('');
     const [quantity, setQuantity] = useState<number>();
     const [cost, setCost] = useState<number>();
-    const [price, setPrice ] = useState<number>();
+    const [price, setPrice] = useState<number>();
 
 
     useEffect(() => {
-        
-        const {productName,quantity,cost,price} = queryData
-        
-        setProductName(productDet?.productName || productName );
+
+        const { productName, quantity, cost, price } = queryData
+
+        setProductName(productDet?.productName || productName);
         setCost(productDet?.cost || cost);
         if (productDet || purchase) {
-            
+
             setBuyerName(purchase.buyerName);
             setQuantity(purchase.quantity);
             setPrice(purchase.price);
@@ -56,10 +56,10 @@ function AddProductModal({ savePurchases, addQuanity }:
     };
 
     function navigateBackToPreviousRoute() {
-        let prodBtoaData = btoa(JSON.stringify(productDet? productDet: queryData));
+        let prodBtoaData = btoa(JSON.stringify(productDet ? productDet : queryData));
         setQuery('product', prodBtoaData);
-        
-          
+
+
         purchase?.buyerName && buyerOrProductId === purchase.buyer.toString() ?
             navigateTo(`/store/products/ABuyerPurchases/${buyerOrProductId}`, null) :
             navigateTo(`/store/products/Sales/${buyerOrProductId}`, null);

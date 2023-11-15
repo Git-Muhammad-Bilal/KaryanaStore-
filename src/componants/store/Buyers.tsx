@@ -8,57 +8,54 @@ import { BuyerInfoTypes } from './storeTypes';
 
 const BuyerInfo = () => {
     const [buyers, setBuyers] = useState<BuyerInfoTypes[]>();
-      
-    const {showBoundary}=useErrorBoundary()
-      
+
+    const { showBoundary } = useErrorBoundary()
+
     const { navigateTo } = useBase64Query()
-    
+
     useEffect(() => {
-       
+
         let fetchBuyers = async () => {
-            
+
             try {
                 let { data } = await axiosApi.get(`/getBuyers`)
-                 console.log(data,'data');
-                 
-                console.log(data);
-                
+
                 if (data.length) {
                     setBuyers(data)
-                }else{
+                } else {
                     throw new Error('Could not fetch buyers! please Reoload')
                 }
-                
+
             } catch (error) {
                 showBoundary(error)
             }
         }
 
         fetchBuyers()
-       
+
     }, []);
 
 
-    function renderEachBuyerDetails(buyerId:number) {
+    function renderEachBuyerDetails(buyerId: number) {
         navigateTo(`/store/products/ABuyerPurchases/${buyerId}`, null)
 
     }
-    async function deleteBuuyer(buyerId:number) {
-    try {
-        
-        let { data } = await axiosApi.get(`/deleteBuyer/${buyerId}`)
-        setBuyers(data)
-    } catch (error) {
-           console.log(error);
-           
-    }
+    async function deleteBuuyer(buyerId: number) {
+        try {
+
+            let { data } = await axiosApi.get(`/deleteBuyer/${buyerId}`)
+            setBuyers(data)
+        } catch (error) {
+            console.log(error);
+
+        }
     }
 
     function renderBuyers() {
 
         return !buyers?.length ? <h1>You Do not have Any Buyers Yet!</h1> :
             buyers.map((b, index) => {
-                
+
                 return <div key={index} className='buyerList-table'>
 
                     <div className='buyer-Name-cont'>

@@ -6,17 +6,12 @@ import axiosApi from '../../axios/axiosApi';
 import "../../karyanaStoreStyless/home.css"
 import "../../karyanaStoreStyless/productList.css"
 import "../../karyanaStoreStyless/buyerStyles/purchaseDetail.css"
-import { useAppSlector , useAppDispatch} from '../../reduxStore/store/StoreTypes';
-import { fetchBuyerName } from '../../reduxStore/Buyer/BuyerNameSlice';
 const BuyerLayout = ({setGetBName}:{setGetBName:React.Dispatch<React.SetStateAction<string>>}) => {
    const [userName, setUserName] = useState<string>('')
-    // let state = useAppSlector((state)=>state.getBuyerName)
-   // let dispatch = useAppDispatch()  
-   // dispatch(fetchBuyerName)
-    useEffect(() => {
+
+   useEffect(() => {
      const fetchStoreName = async () => {
          const { data } = await axiosApi.get('/buyerName')
-         console.log(data, 'data');
          setUserName(data)
          setGetBName(data) 
       }

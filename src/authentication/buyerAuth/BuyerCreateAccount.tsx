@@ -9,23 +9,23 @@ import { useState } from "react";
 
 export const BuyerCreateAccount = () => {
   const [buyerDetail, setBuyerDetail] = useState<Buyer>({
-    name:'',
-    lastName:'',
-    email:'',
-    password:''
+    name: '',
+    lastName: '',
+    email: '',
+    password: ''
   });
-  
+
   let navigate = useNavigate();
-  
+
   const [createBuyerAccount] = useCreateBuyerAccountMutation()
 
   const setBuyerDet = (e: React.ChangeEvent<HTMLInputElement>) => {
-            const {value, name} = e.target
-             
-            for (const key in buyerDetail) {
-           
+    const { value, name } = e.target
+
+    for (const key in buyerDetail) {
+
       if (key === name) {
-         setBuyerDetail((previousState:Buyer) => {
+        setBuyerDetail((previousState: Buyer) => {
           return { ...previousState, [key]: value }
         })
       }
@@ -33,9 +33,9 @@ export const BuyerCreateAccount = () => {
 
   }
 
-  const createBuyer =async ()=>{
-      await createBuyerAccount(buyerDetail)
-      navigate('/Buyer/Purchases', {replace:true})
+  const createBuyer = async () => {
+    await createBuyerAccount(buyerDetail)
+    navigate('/Buyer/Purchases', { replace: true })
   }
 
 
@@ -82,7 +82,7 @@ export const BuyerCreateAccount = () => {
 
         <div className="creAcc-btn-cont">
           <button onClick={createBuyer}>Sign Up</button>
-          <NavLink replace  to="/BuyerLogin"><button>Or Login</button></NavLink>
+          <NavLink replace to="/BuyerLogin"><button>Or Login</button></NavLink>
         </div>
       </div>
     </div>

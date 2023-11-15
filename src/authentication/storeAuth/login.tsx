@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axiosApi from '../../axios/axiosApi';
-import { useErrorBoundary } from "react-error-boundary";
 import KaryanaNameWithTitle from "./karynanNameWithTitle";
 import "../../karyanaStoreStyless/login.css"
 
@@ -12,7 +11,6 @@ const LoginComp = () => {
     const [email, setEmail] = useState('x@gmail.com')
     const [password, setPassword] = useState('123')
     const [userNotFound, setUserNotFound] = useState();
-    const { showBoundary } = useErrorBoundary()
     let navigate = useNavigate()
 
     const Login = async () => {
@@ -24,16 +22,16 @@ const LoginComp = () => {
                     store: 'store'
                 }
             )
+            console.log(data, 'data');
+
             if (data.err) {
                 setUserNotFound(data.err)
             } else {
-                
-                navigate(`/store/products/ProductList`, {replace:true})
+                navigate(`/store/products/ProductList`, { replace: true })
             }
 
-        } catch (error) {
-            console.log(error);
-            showBoundary(error)
+        } catch (error: any) {
+            setUserNotFound(error?.response?.data)
         }
 
 

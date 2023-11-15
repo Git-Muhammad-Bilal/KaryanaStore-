@@ -9,36 +9,38 @@ import axiosApi from '../../axios/axiosApi';
 
 
 
-  
+
 
 
 const CreateProduct = () => {
-    let x ={
-        productName:'',
-        quantity:undefined,
-        cost:undefined, 
-        price:undefined
+    let prd = {
+        productName: '',
+        quantity: undefined,
+        cost: undefined,
+        price: undefined
     }
-    const [productInfo, setProductInfo] = useState<productsTypes >(x);
-    
-    let [requiredField, setRequiredFoields] = useState<productsTypes[]>([]); 
+    const [productInfo, setProductInfo] = useState<productsTypes>(prd);
+
+    let [requiredField, setRequiredFoields] = useState<productsTypes[]>([]);
     let [bol, setBol] = useState<boolean>(false);
     let { showBoundary } = useErrorBoundary()
     const { queryData, navigateTo } = useBase64Query()
 
 
-   
-        let createOrUpdateProduct = async (product:productsTypes) => {
-            try {
-             await axiosApi.post('/createOrUpdate',{
-                    ...product
-                });
-                }catch (error) {
-                    
-                showBoundary(error)
-            }  
+
+    let createOrUpdateProduct = async (product: productsTypes) => {
+
+        try {
+
+            await axiosApi.post('/createOrUpdate', {
+                ...product
+            });
+        } catch (error) {
+
+            showBoundary(error)
         }
-   
+    }
+
     useEffect(() => {
         if (bol) {
             navigateTo(`/store/products/ProductList`, null)
@@ -49,8 +51,8 @@ const CreateProduct = () => {
 
     const setProductDetails = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value, name } = e.target
-           console.log(value,name, 'value, name');
-           
+        console.log(value, name, 'value, name');
+
         if (name === 'productName') {
             String(value)
         }
@@ -83,15 +85,15 @@ const CreateProduct = () => {
 
         setRequiredFoields([])
         let isAnyInpEmpty = false;
-        
+
         for (const key in productInfo) {
-            
+
             if (!productInfo[key as keyof productsTypes]) {
                 isAnyInpEmpty = true
                 setRequiredFoields((prevState) => {
-                          
-                    return {...prevState, key}
-                    
+
+                    return { ...prevState, key }
+
                 })
             }
         }
@@ -99,7 +101,7 @@ const CreateProduct = () => {
             return
         }
         if (queryData?._id) {
-            // let data = await createOrUpdateProduct({ ...productInfo, _id: queryData?._id })
+            await createOrUpdateProduct({ ...productInfo, _id: queryData?._id })
             setBol(true)
         } else {
             await createOrUpdateProduct(productInfo)
@@ -162,7 +164,7 @@ const CreateProduct = () => {
                 </div>
                 <input
                     type="text"
-                    placeholder="Price" 
+                    placeholder="Price"
                     value={productInfo.price}
                     name='price'
                     onChange={e => { setProductDetails(e) }}

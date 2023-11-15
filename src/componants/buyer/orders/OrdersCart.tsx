@@ -9,10 +9,10 @@ import io from 'socket.io-client';
 import { localStorageTypes } from '../../../axios/axiosApi';
 import { useAppSlector } from '../../../reduxStore/store/StoreTypes';
 
-const token:any  = localStorage.getItem('accessToken') 
- const strg:localStorageTypes = JSON.parse(token)
+const token: any = localStorage.getItem('accessToken')
+const strg: localStorageTypes = JSON.parse(token)
 const socketio = io('http://localhost:3003', {
-  auth: { jwt:strg?.accessToken }
+  auth: { jwt: strg?.accessToken }
 
 })
 
@@ -25,28 +25,27 @@ const OrdersCart = ({ storeId, setHasOrdered, hasOrdered, getBName }:
     hasOrdered?: string[],
     getBName?: string,
   }) => {
-console.log(getBName,'bname');
+  console.log(getBName, 'bname');
 
   let cn = !storeId?.length ? "order-cart-cont " : "order-cart-for-prods"
-  
-  let data = useAppSlector(({ cartProduct}) => cartProduct)
-  // console.log(data, 'cart');
-  
-  
+
+  let data = useAppSlector(({ cartProduct }) => cartProduct)
+
+
   const { queryData } = useBase64Query();
   const { storeName, products } = queryData;
-  
-  const orderPurchases = () => {
-      
-    socketio.emit('order',  [data.cartProduct, getBName],(res:string)=>{
-      
-      setHasOrdered([res])
-      
-    }) 
 
-    
+  const orderPurchases = () => {
+
+    socketio.emit('order', [data.cartProduct, getBName], (res: string) => {
+
+      setHasOrdered([res])
+
+    })
+
+
   }
-  
+
 
 
 
@@ -81,8 +80,8 @@ console.log(getBName,'bname');
         <div className='order-btn'>
           <button onClick={() => data.cartProduct.length && orderPurchases()}>Order Now</button>
         </div>
-         
-         
+
+
         <div className="cart">
           <img src="/cart.png" alt="car" />
         </div>
@@ -91,11 +90,9 @@ console.log(getBName,'bname');
       }
 
       <div className='quantity'>
-        <p>{ data.cartProduct.length}</p>
+        <p>{data.cartProduct.length}</p>
       </div>
-      {/* <div className='hr'>
-        <hr />
-      </div> */}
+
     </div>
   )
 }

@@ -3,8 +3,9 @@ import { useLocation, useParams } from 'react-router-dom';
 import AddModal from '../AddModal';
 import "../../../karyanaStoreStyless/AddModal.css"
 import { useErrorBoundary } from 'react-error-boundary';
-import {BuyerTypes, AddQuanityTypes} from './types';
+import { BuyerTypes, AddQuanityTypes } from './types';
 import axiosApi from '../../../axios/axiosApi';
+
 const CreatePurchase = () => {
 
     const { showBoundary } = useErrorBoundary()
@@ -12,9 +13,9 @@ const CreatePurchase = () => {
     let { productId } = useParams();
     const { pathname } = useLocation();
 
-    async function savePurchases({ buyerName, quantity, price }:BuyerTypes) {
+    async function savePurchases({ buyerName, quantity, price }: BuyerTypes) {
         try {
-           const data = await axiosApi.post('/createPurchase',
+            const data = await axiosApi.post('/createPurchase',
                 {
                     productName: queryData?.productName,
                     buyerName,
@@ -26,17 +27,17 @@ const CreatePurchase = () => {
                 }
 
             )
-             console.log(data);
+            console.log(data);
 
             let ProdInfo = {
                 ...queryData,
-                quantity: queryData?.quantity  - Number(quantity)
+                quantity: queryData?.quantity - Number(quantity)
             }
 
             let prodBtoaData = btoa(JSON.stringify(ProdInfo))
             setQuery('product', prodBtoaData);
-            
-            
+
+
             navigateTo(`/store/products/Sales/${productId}`, null)
 
         } catch (error) {
@@ -44,8 +45,8 @@ const CreatePurchase = () => {
         }
     }
 
-    const addQuanity = ({value, setPrice, setQuantity}:AddQuanityTypes) => {
-        const {productDet} = queryData
+    const addQuanity = ({ value, setPrice, setQuantity }: AddQuanityTypes) => {
+        const { productDet } = queryData
 
         if (value >= queryData?.quantity) {
             setPrice(queryData?.price * queryData?.quantity)
@@ -63,8 +64,8 @@ const CreatePurchase = () => {
                 <AddModal
                     // productDet={queryData}
                     // pathReceived={pathname}
-                    addQuanity={({value, setPrice, setQuantity}:AddQuanityTypes) => { addQuanity({value, setPrice, setQuantity}) }}
-                    savePurchases={(product:BuyerTypes) => savePurchases(product) } /> : ''}
+                    addQuanity={({ value, setPrice, setQuantity }: AddQuanityTypes) => { addQuanity({ value, setPrice, setQuantity }) }}
+                    savePurchases={(product: BuyerTypes) => savePurchases(product)} /> : ''}
         </>
     )
 

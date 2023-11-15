@@ -3,18 +3,18 @@ import { useParams } from 'react-router-dom';
 import AddModal from '../AddModal';
 import "../../../karyanaStoreStyless/AddModal.css"
 import { useCreatePurchaseMutation } from '../../../reduxStore/karyanaStore/purchaseSlice';
-import { BuyerTypes , AddQuanityTypes} from './types';
+import { BuyerTypes, AddQuanityTypes } from './types';
 
 
 const EditPurchase = () => {
-      
-    const {queryData, setQuery, navigateTo } = useBase64Query()
-    console.log(queryData,'quyerdata');
-    
-     
+
+    const { queryData, setQuery, navigateTo } = useBase64Query()
+    console.log(queryData, 'quyerdata');
+
+
     let { buyerOrProductId } = useParams();
     const [editPurchase] = useCreatePurchaseMutation()
-    
+
 
     async function editPurc({ quantity, price }: BuyerTypes) {
         try {
@@ -35,7 +35,7 @@ const EditPurchase = () => {
             )
             let ProdInfo = {
                 ...queryData.productDet,
-                quantity: queryData.purchase.quantity+queryData.productDet.quantity - Number(quantity)
+                quantity: queryData.purchase.quantity + queryData.productDet.quantity - Number(quantity)
             }
 
             let prodBtoaData = btoa(JSON.stringify(ProdInfo))
@@ -49,7 +49,7 @@ const EditPurchase = () => {
         }
     }
 
-    const addQuanity = ({value, setPrice, setQuantity}:AddQuanityTypes) => {
+    const addQuanity = ({ value, setPrice, setQuantity }: AddQuanityTypes) => {
         const { productDet, purchase } = queryData;
         console.log('quyer', productDet, purchase);
         if (value < Number(purchase?.quantity) + Number(productDet?.quantity)) {
@@ -73,8 +73,8 @@ const EditPurchase = () => {
                     <AddModal
                         // productDet={queryData.productDet}
                         // purchase={queryData.purchase}
-                        addQuanity={({value, setPrice, setQuantity}:AddQuanityTypes) => { addQuanity({value, setPrice, setQuantity}) }}
-                        savePurchases={(product:BuyerTypes) => { editPurc(product) }} />
+                        addQuanity={({ value, setPrice, setQuantity }: AddQuanityTypes) => { addQuanity({ value, setPrice, setQuantity }) }}
+                        savePurchases={(product: BuyerTypes) => { editPurc(product) }} />
 
                     :
                     ''

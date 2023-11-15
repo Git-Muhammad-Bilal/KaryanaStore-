@@ -25,33 +25,33 @@ const MapProductList = ({ product, index, socketio, setIsNewNotfn, setProducts }
     const { setQuery, navigateTo } = useBase64Query();
 
     const deleteProduct = async (id: string) => {
-        let {data} = await axiosApi.delete(`/deleteProduct/${id}`)
+        let { data } = await axiosApi.delete(`/deleteProduct/${id}`)
         setProducts(data)
     }
     let curNotiftn = newNf[index]?.notfiedPurchases?.purchaseCount.toString()
     let prodid = newNf[index]?.notfiedPurchases?.productId?.toString()
 
-  useEffect(()=>{
-    socketio.connect()   
-       
-    return()=>{
-        socketio.disconnect()
-    }
-   })   
+    useEffect(() => {
+        socketio.connect()
+
+        return () => {
+            socketio.disconnect()
+        }
+    }, [])
 
     useEffect(() => {
-                 
-            function onConnect() {
-                setIsConnected(true);
-            }
-            
-            function onDisconnect() {
-                setIsConnected(false);
-            }
-           
-            function getNf(arg: any) {
-                setNf(arg)
-                setIsNewNotfn(Number(Date.now()))
+
+        function onConnect() {
+            setIsConnected(true);
+        }
+
+        function onDisconnect() {
+            setIsConnected(false);
+        }
+
+        function getNf(arg: any) {
+            setNf(arg)
+            setIsNewNotfn(Number(Date.now()))
         }
 
 

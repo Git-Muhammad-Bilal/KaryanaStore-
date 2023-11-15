@@ -6,10 +6,10 @@ import ProfilePopUp from './ProfilePopUp'
 import { useErrorBoundary } from 'react-error-boundary'
 
 let token = localStorage.getItem('accessToken')
-let url = 'http://localhost:3003'
+let url = 'http://localhost:3003/'
 
 const StoreProfile = () => {
-
+    
    const [storeProfile, setStoreProfie] = useState<any>();
    const [isPopUp, setIsPopUp] = useState<boolean>(false);
    const { showBoundary } = useErrorBoundary()
@@ -23,8 +23,10 @@ const StoreProfile = () => {
 
       let result = async () => {
          try {
-            let data = await axiosApi.get('/getStoreProfile')
-            data.data === '' ? setStoreProfie(null) : setStoreProfie(data.data)
+            let {data} = await axiosApi.get('/getStoreProfile')
+                  console.log(data, 'profile', `${url}${data}`);
+                   
+            data=== '' ? setStoreProfie(null) : setStoreProfie(data)
 
          } catch (error) {
             showBoundary(error)
@@ -34,7 +36,7 @@ const StoreProfile = () => {
       result()
       
 
-   }, [])
+   }, [storeProfile])
 
    const [fetchStNm, setFetchStNm] = useState<string>('');
 
@@ -60,7 +62,6 @@ const StoreProfile = () => {
 
             <img
                src={storeProfile ? `${url}${storeProfile}` : avatar}
-               // src={avatar}
                alt="upload proile"
                className='img'
                onClick={openPopUp}
@@ -70,7 +71,7 @@ const StoreProfile = () => {
             <p>{fetchStNm} </p>
          </div>
          {isPopUp && <ProfilePopUp
-            renderProfile={(file) => { setStoreProfie(file) }}
+            renderProfile={setStoreProfie}
             closePopUp={(setFalse: boolean) => { setIsPopUp(setFalse) }}
             storeProfile={storeProfile}
             avatar={avatar}

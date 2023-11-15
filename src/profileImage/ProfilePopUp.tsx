@@ -3,9 +3,11 @@ import axiosApi from '../axios/axiosApi'
 import '../karyanaStoreStyless/profile.css'
 import { useErrorBoundary } from 'react-error-boundary'
 import { JsxElement } from 'typescript'
-let url = 'http://localhost:3003'
+let url = 'http://localhost:3003/'
+
+
 const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
-    closePopUp: (b: boolean) => void, renderProfile: (fn: any) => any, storeProfile: {}, avatar: string
+    closePopUp: (b: boolean) => void, renderProfile:  React.Dispatch<any>, storeProfile: {}, avatar: string
 }) => {
 
     interface imgTypes {
@@ -19,10 +21,10 @@ const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
     const { showBoundary } = useErrorBoundary()
     const inputEle = useRef<any>(null)
 
-                             
+
     function extractFile(e: React.ChangeEvent<HTMLInputElement>) {
-        
-         let img = inputEle.current?.files
+
+        let img = inputEle.current?.files
         setUploadImg(img[0])
 
     }
@@ -60,13 +62,12 @@ const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
             }
         }
         let formData = new FormData()
+
         formData.append('profileImage', uploadImg)
+
         try {
             let { data } = await axiosApi.post('/uploadProfile', formData);
-            console.log(data, 'dataaaaaa');
-            let x = URL.createObjectURL(data)
-            console.log('urllllllllll', x);
-            
+
             renderProfile(data.filename)
 
         } catch (error) {
@@ -78,14 +79,15 @@ const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
 
 
     async function removeProfile() {
-        console.log(storeProfile);
+
         try {
-            let { data } = await axiosApi.post(`/removeProfile/${storeProfile}`)
-            console.log(data);
+            
             renderProfile('')
+            await axiosApi.post(`/removeProfile/${storeProfile}`)
             closePopUp(false)
 
         } catch (error) {
+            
             showBoundary(error)
             closePopUp(true)
         }
@@ -94,13 +96,12 @@ const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
 
 
     function createSrc() {
-        
+
         if (uploadImg) {
             return URL.createObjectURL(uploadImg)
         } else {
 
-            // return storeProfile ? `${url}${storeProfile}` : avatar
-            return  avatar
+            return storeProfile ? `${url}${storeProfile}` : avatar
         }
     }
 
@@ -122,7 +123,7 @@ const ProfilePopUp = ({ closePopUp, renderProfile, storeProfile, avatar }: {
                         className='pop'
                         id="store-profile"
                         accept='image/*'
-                        onChange={( e: React.ChangeEvent<HTMLInputElement> )=>{extractFile(e)}}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => { extractFile(e) }}
                     />
                 </div>
 

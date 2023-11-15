@@ -6,13 +6,14 @@ import axiosApi from '../../axios/axiosApi';
 import "../../karyanaStoreStyless/buyerInfo.css"
 
 const RenderSales = ({ purchases, productsFromBuyers , setSales }: { purchases: any, productsFromBuyers?: [] ,setSales?:any }) => {
-    
+      
     const { setQuery, queryData, navigateTo } = useBase64Query();
     const { showBoundary } = useErrorBoundary()
     let prams = useParams();
     let buyerId = prams?.buyerId
     let productId = prams?.productId
-
+  console.log(buyerId,'prams');
+  
     async function deletePurchaseFromAProduct(purchaseId: number, quantity: number) {
         try {
             let {data} = await axiosApi.delete(`/deletePurchaseFromAproduct/${purchaseId}`)
@@ -34,8 +35,10 @@ const RenderSales = ({ purchases, productsFromBuyers , setSales }: { purchases: 
     
     let renderPurchases = () => {
            return  purchases?.map((p: PurchaseTypes) => {
-             const { productName, buyerName, quantity, cost, price, _id, product } = p.purchaseId || p;
-              if (productId === product?.toString() || buyerId === product?.toString()) {
+               
+               const { productName, buyerName, quantity, cost, price, _id, product , buyer} = p.purchaseId || p;
+               
+               if (productId === product?.toString() || buyerId?.toString() === buyer?.toString()) {
                 return <div key={_id} className='puchases-details'>
                     <div><p>{buyerName}</p></div>
                     <div><p>{productName}</p></div>

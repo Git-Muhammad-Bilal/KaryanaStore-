@@ -9,13 +9,6 @@ import { Navigate } from 'react-router-dom';
 
 const Store = () => {
    
-// let strg = localStorage.getItem('accessToken')
-  
-// if (!strg) {
-//  return <Navigate to ='/'/>
-// }
-
-
     return (
         <div className='home-container'>
             <div className='home-header-container'>
